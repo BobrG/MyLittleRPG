@@ -5,8 +5,8 @@
 
 void list() {
 	std::cout << " 1 - Wizard" << std::endl;
-	std::cout << " 2 - Orc" << std::endl;
-	std::cout << " 3 - Dwarf" << std::endl;
+	std::cout << " 2 - Warrior" << std::endl;
+	std::cout << " 3 - Paladin" << std::endl;
 	std::cout << " any other key - /leave" << std::endl;
 }
 
@@ -15,10 +15,10 @@ void create(int key, Unit** u) {
 		*u = new Wizard;
 	}
 	else if (key == 2) {
-		*u = new Orc;
+		*u = new Warrior;
 	}
 	else if (key == 3) {
-		*u = new Dwarf;
+		*u = new Paladin;
 	}
 	else {
 		key = 0;
@@ -31,9 +31,26 @@ bool AnyAlive(Unit* a, Unit* b) {
 }
 
 void Arena(Unit* Player) {
+	int key = 0;
+	std::cout << "Choose a type of fight:" << std::endl;
+	// Two types: team battle key = 2 && single player key = 1;
+	switch (key)
+	{
+	case 1:
+		SingleArena(Player);
+		break;
+	case 2:
+		TeamArena(Player);
+		break;
+	default:
+		break;
+	}
+	
+}
+
+void SingleArena(Unit* Player) {
 	Unit* Opponent = NULL;
 	int key = 0;
-
 	std::cout << "Choose your opponent:" << std::endl;
 	list();
 	std::cin >> key;
@@ -58,9 +75,6 @@ void Arena(Unit* Player) {
 
 		Opponent->SetStat(pl_dmg, opp_hit->GetBaff());
 		Player->SetStat(opp_dmg, pl_hit->GetBaff());
-
-
-
 	}
 
 	std::cout << "THE END OF FIGHT:" << std::endl;
@@ -68,9 +82,69 @@ void Arena(Unit* Player) {
 	Player->info();
 	Opponent->info();
 
-
 }
 
+void TeamArena(Unit* Player) {
+	std::vector <Unit*> Opponents;
+	std::vector <Unit*> Players;
+	int num_opp, num_pl, num_min, num_max;
+	std::cout << "Input size of your team: (take your character in account too)" << std::endl;
+	std::cin >> num_pl;
+	Players.resize(num_pl); 
+	for (int i = 0; i < num_pl; ++i) {
+		int key;
+		std::cout << "Choose your teammate #" << i + 1 << std::endl;
+		list();
+		std::cin >> key;
+		create(key, &Players[i]);
+	}
+	Players.insert(Players.begin(),Player);
+
+	std::cout << "Input size of your opponent team:" << std::endl;
+	std::cin >> num_opp;
+	Opponents.resize(num_opp);
+	for (int i = 0; i < num_opp; ++i) {
+		int key;
+		std::cout << "Choose your opponent #" << i + 1 << std::endl;
+		list();
+		std::cin >> key;
+		create(key, &Opponents[i]);
+	}
+
+	if (num_pl > num_opp) {
+		num_min = num_opp;
+		num_max = num_pl;
+	}
+	else {
+		num_min = num_pl;
+		num_max = num_opp;
+	}
+	for (int i = 0; i < num_min; ++i) {
+		std::cout << "Player #" << i + 1 << std::endl;
+		Players[i]->UnitMenu();
+
+		std::cout << "Opponent #" << i + 1 << std::endl;
+		Opponents[i]->UnitMenu();
+	}
+	if (Opponents.size() > Players.size()) {
+		for (int i = num_min; i < num_max; ++i) {
+			std::cout << "Opponent #" << i + 1 << std::endl;
+			Opponents[i]->UnitMenu();
+		}
+	}
+	else {
+		for (int i = num_min; i < num_max; ++i) {
+			std::cout << "Player #" << i + 1 << std::endl;
+			Players[i]->UnitMenu();
+		}
+	}
+
+	std::cout << "Choose the order of team's attack:" << std::endl;
+	std::cout << "Player's team strikes first." << std::endl;
+	std::cout << "Opponent's team strikes first." << std::endl;
+
+
+}
 
 void menu(Unit* u) {
 	int key = 0;
@@ -147,6 +221,11 @@ void menu(Unit* u) {
 			std::cout << "Unknown command. Please concentrate and try again." << std::endl;
 			std::cin >> key;
 
+			break;
+		}
+		if (u->getHealth() <= 0) {
+			system("CLS");
+			std::cout << "Your hero is dead. Rest in piece... and come again for new battles." << std::endl;
 			break;
 		}
 	}

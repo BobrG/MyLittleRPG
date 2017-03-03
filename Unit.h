@@ -47,7 +47,7 @@ public:
 
 	virtual void SetStat(int damage, std::vector<int> &baff); //updates hero's stats 
 
-	virtual void UnitMenu() = 0;
+	virtual void UnitMenu();
 
 	// not finished yet;
 	virtual ~Unit() = default; //destructor, undefined yet;
@@ -67,12 +67,11 @@ protected:
 	char InfoBlock = '#';
 };
 
-class Dwarf :public Unit {
+class Paladin :public Unit {
 public:
 	void InitUnit();
 	Attack* Hit();
 	void SetStat(int damage, std::vector<int> &baff);
-	void UnitMenu();
 	void info(); //ctrl+c from previous task;
 	void replica();
 };
@@ -82,17 +81,15 @@ public:
 	void InitUnit();
 	Attack* Hit();
 	void SetStat(int damage, std::vector<int> &baff);
-	void UnitMenu();
 	void info(); //ctrl+c from previous task;
 	void replica();
 };
 
-class Orc :public Unit {
+class Warrior :public Unit {
 public:
 	void InitUnit();
 	Attack* Hit();
 	void SetStat(int damage, std::vector<int> &baff);
-	void UnitMenu();
 	void info(); //ctrl+c from previous task;
 	void replica();
 };

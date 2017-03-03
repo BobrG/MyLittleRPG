@@ -13,7 +13,7 @@ std::vector <int> Attack::GetBaff() {
 
 Shield::Shield() : rd()
 , mt(rd())
-, dist(1, 30)
+, dist(1, 40)
 , dist1(1, 100)
 {
 	baff.resize(3);
@@ -70,7 +70,7 @@ void Shield::info() {
 
 Spell::Spell() : rd()
 , mt(rd())
-, dist(1, 20)
+, dist(1, 30)
 , dist1(1, 100)
 {
 	baff.resize(3);
