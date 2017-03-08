@@ -13,21 +13,22 @@ std::vector <int> Attack::GetBaff() {
 
 Shield::Shield() : rd()
 , mt(rd())
-, dist(1, 40)
+, dist(1, max_dmg)
 , dist1(1, 100)
 {
-	baff.resize(3);
+	baff.resize(4);
 }
 
 int Shield::attack() {
 	DMG = dist(mt);
 	info();
+	baff[0] = 35;
 	return DMG;
 }
 
 void Shield::fendoff(int damage) {
 	if (dist1(mt) > 50) {
-		baff[0] = (damage * 5) / 10;
+		baff[1] = (damage * 5) / 10;
 		std::cout << "P R O T E C T E D" << std::endl;
 	}
 }
@@ -68,30 +69,31 @@ void Shield::info() {
 
 }
 
-Spell::Spell() : rd()
+Staff::Staff() : rd()
 , mt(rd())
-, dist(1, 30)
+, dist(1, max_dmg)
 , dist1(1, 100)
 {
-	baff.resize(3);
+	baff.resize(4);
 }
 
-int Spell::attack() {
+int Staff::attack() {
 	DMG = dist(mt);
 	if (dist1(mt) > 40) {
-		baff[0] = (DMG * 6) / 10;
+		baff[1] = (DMG * 6) / 10;
 		std::cout << "H I L L I N G" << std::endl;
 
 	}
 	info();
+	baff[0] = 35;
 	return DMG;
 }
 
-void Spell::fendoff(int damage) {
+void Staff::fendoff(int damage) {
 	//empty;
 }
 
-void Spell::info() {
+void Staff::info() {
 	HANDLE hstdout = GetStdHandle(STD_OUTPUT_HANDLE);
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
 	GetConsoleScreenBufferInfo(hstdout, &csbi);
@@ -126,15 +128,15 @@ void Spell::info() {
 
 }
 
-Rage::Rage() : rd()
+Sword::Sword() : rd()
 , mt(rd())
-, dist(1, 50)
+, dist(1, max_dmg)
 , dist1(1, 100)
 {
 	baff.resize(3);
 }
 
-int Rage::attack() {
+int Sword::attack() {
 	if (dist1(mt) > 30) {
 		DMG = 2 * dist(mt);
 		std::cout << "C R I T I C A L S T R I K E" << std::endl;
@@ -142,14 +144,15 @@ int Rage::attack() {
 	else
 		DMG = dist(mt);
 	info();
+	baff[0] = 35;
 	return DMG;
 }
 
-void Rage::fendoff(int damage) {
+void Sword::fendoff(int damage) {
 	//empty;
 }
 
-void Rage::info() {
+void Sword::info() {
 	HANDLE hstdout = GetStdHandle(STD_OUTPUT_HANDLE);
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
 	GetConsoleScreenBufferInfo(hstdout, &csbi);

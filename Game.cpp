@@ -4,14 +4,6 @@
 #include "Game.h"
 #include "Unit.h"
 
-// heads of tails function;
-int h_or_t() {
-	std::random_device rd;
-	std::mt19937 mt;
-	std::uniform_int_distribution<int> dist(1,2);
-	return dist(mt);
-}
-
 void list() {
 	std::cout << " 1 - Wizard" << std::endl;
 	std::cout << " 2 - Warrior" << std::endl;
@@ -117,21 +109,35 @@ void SingleArena(Unit* Player) {
   - inspiration
   - initiation
   
+
+  Team attack:
+  Summary initiative defines what team strikes first
+  (how declare the first attack ???)
+  Opponent's units are disposed in order of each unit initiative;
+  Player's units are disposed in order defined by user;
+
+  In each battle the order is defined by initiative, which counts second time for fighters;
+
+  TODO: Add class system. Expand and improve Skills class;
+
   */
 
 void TeamArena(Unit* Player) {
 	std::vector <Unit*> Opponents;
 	std::vector <Unit*> Players;
+	int summ_pl, summ_opp = 0;
 	int num_opp, num_pl, num_min, num_max;
 	std::cout << "Input size of your team: (take your character in account too)" << std::endl;
 	std::cin >> num_pl;
 	Players.resize(num_pl); 
+	summ_pl = Player->setInitiative();
 	for (int i = 0; i < num_pl; ++i) {
 		int key;
 		std::cout << "Choose your teammate #" << i + 1 << std::endl;
 		list();
 		std::cin >> key;
 		create(key, &Players[i]);
+		summ_pl += Players[i]->setInitiative();
 	}
 	Players.insert(Players.begin(),Player);
 
@@ -144,18 +150,10 @@ void TeamArena(Unit* Player) {
 		list();
 		std::cin >> key;
 		create(key, &Opponents[i]);
+		summ_opp += Opponents[i]->setInitiative();
 	}
 
-	std::cout << "Choose the order of team's attack:" << std::endl;
-	std::cout << "1 - Player's team strikes first." << std::endl;
-	std::cout << "2 - Opponent's team strikes first." << std::endl;
-	std::cout << "3 - Randomize." << std::endl;
-	int key = 0;
-	std::cin >> key;
-	if (key == 3) {
-		key = h_or_t();
-	}
-
+	
 	std::cout << "Define the order in which your team will fight." << std::endl;
 	for (int i = 0; i < Players.size(); ++i) {
 		std::cout << "Player #" << i + 1 << std::endl;

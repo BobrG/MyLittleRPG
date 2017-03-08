@@ -17,7 +17,7 @@ int Unit::getHealth() {
 	return HP;
 }
 
-void Unit::SetStat(int damage, std::vector<int> &baff) {
+void Unit::SetStat(int damage, const std::vector<int>& baff = {}) {
 	HP -= damage;
 }
 
@@ -164,19 +164,26 @@ void Paladin::info(){
 	std::cout << std::endl;
 }
 
-void Paladin::SetStat(int damage, std::vector<int> &baff) {
+void Paladin::SetStat(int damage, const std::vector<int>& baff = {}) {
 	HP -= damage;
-	if (baff[0]) {
-		HP += baff[0];
-	}
+	battle_stats[1] -= baff[0];
 	if (baff[1]) {
-		HP *= baff[1];
+		HP += baff[1];
 	}
 	if (baff[2]) {
+		HP *= baff[2];
+	}
+	if (baff[3]) {
 		//something special *_*
 	}
+
 }
 
+int Paladin::SpecialAbility() {
+	
+
+	
+}
 
 void Paladin::replica() {
 	HANDLE hstdout = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -208,7 +215,7 @@ void Wizard::InitUnit() {
 	battle_stats[0] = 1;
 	battle_stats[1] = 100;
 	battle_stats[2] = 100;
-
+	spec_ab = {1,3,6};
 }
 
 int Wizard::setInitiative() {
@@ -282,19 +289,27 @@ void Wizard::replica() {
 
 }
 
-void Wizard::SetStat(int damage, std::vector<int> &baff) {
+void Wizard::SetStat(int damage, const std::vector<int>& baff = {}) {
 	HP -= damage;
-	if (baff[0]) {
-		HP += baff[0];
-	}
+	battle_stats[1] -= baff[0];
 	if (baff[1]) {
-		HP *= baff[1];
+		HP += baff[1];
 	}
 	if (baff[2]) {
-	//something special ^_^
+		HP *= baff[2];
+	}
+	if (baff[3]) {
+		//something special ^_^
 	}
 }
 
+//void Wizard::Hilling(Unit& Player) {
+//	std::random_device rd;
+//	std::mt19937 mt;
+//	// add max_hilling and min_hilling. description where ???
+//	std::uniform_int_distribution<int> dist(min_hil, max_hil);
+//	Player.SetStat(-dist(mt));
+//}
 
 Attack* Wizard::Hit() {
 	replica();
@@ -388,15 +403,20 @@ void Berserk::replica() {
 
 void Berserk::SetStat(int damage, std::vector<int> &baff) {
 	HP -= damage;
-	if (baff[0]) {
-		HP += baff[0];
-	}
+	battle_stats[1] -= baff[0];
 	if (baff[1]) {
-		HP *= baff[1];
+		HP += baff[1];
 	}
 	if (baff[2]) {
+		HP *= baff[2];
+	}
+	if (baff[3]) {
 		//something special <3
 	}
+}
+
+int Berserk::SpecialAbility() {
+
 }
 
 Attack* Berserk::Hit() {

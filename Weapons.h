@@ -30,16 +30,17 @@ protected:
 	int DMG;
 
 	/* baff is a vector of side effects:
-	*  baff[0] - effects on HP (+/-)
-	*  baff[1] - effects on HP (multiplication)
-	*  baff[2] - special effects(poisoning for ex.)
+	*  baff[0] - effects on Stamina (default)
+	*  baff[1] - effects on HP (+/-)
+	*  baff[2] - effects on HP (multiplication)
+	*  baff[3] - special effects(poisoning for ex.)
 	*/
 	std::vector<int> baff;
 };
 
-class Rage : public Attack { //for Orc;
+class Sword : public Attack { //for Orc;
 public:
-	Rage();
+	Sword();
 	int attack();
 	void fendoff(int damage);
 	void info();
@@ -47,19 +48,21 @@ private:
 	/* Randomization data for
 	*  computing probability;
 	*/
+	int max_dmg = 50;
 	std::random_device rd;
 	std::mt19937 mt;
 	std::uniform_int_distribution<int> dist;
 	std::uniform_int_distribution<int> dist1;
 };
 
-class Spell : public Attack { //for Wizard;
+class Staff : public Attack { //for Wizard;
 public:
-	Spell();
+	Staff();
 	int attack();
 	void fendoff(int damage);
 	void info();
 private:
+	int max_dmg = 30;
 	std::random_device rd;
 	std::mt19937 mt;
 	std::uniform_int_distribution<int> dist;
@@ -73,6 +76,7 @@ public:
 	void fendoff(int damage);
 	void info();
 private:
+	int max_dmg = 40;
 	std::random_device rd;
 	std::mt19937 mt;
 	std::uniform_int_distribution<int> dist;
@@ -86,6 +90,7 @@ public:
 	void fendoff(int damage);
 	void info();
 private:
+	int max_dmg = 25;
 	std::random_device rd;
 	std::mt19937 mt;
 	std::uniform_int_distribution<int> dist;

@@ -3,6 +3,8 @@
 #include <vector>
 #include "Weapons.h"
 
+typedef std::vector<Attack*> Weapons;
+
 class Unit {
 public:
 	/* Function Hit():
@@ -32,7 +34,7 @@ public:
 
 	int getHealth(); //get unit's HP;
 
-	
+	virtual int SpecialAbility() = 0;
 
 	virtual int setInitiative() = 0;//sets unit's initiative before each battle;
 
@@ -49,7 +51,7 @@ public:
 	*  adds baff and some special abilities of each hero.
 	*/
 
-	virtual void SetStat(int damage, std::vector<int> &baff); //updates hero's stats 
+	virtual void SetStat(int damage, const std::vector<int>& baff = {}); //updates hero's stats 
 
 	virtual void UnitMenu();
 
@@ -62,6 +64,7 @@ protected:
 	*  HP - character's health points;
 	*  DF - character's defence points; NOT USED YET!!!	
 	*  init_max - max initiative in a range; 
+	*  min_insp - minimum inspiration requered for abilities;
 	*  battle_stats - vector of special unit's stats used in battle:
 	*  [0] - initiation;
 	*  [1] - stamina;
@@ -74,6 +77,7 @@ protected:
 	int HP;
 	int DF;
 	int init_max;
+	int min_insp;
 	int level;
 	std::vector<int> battle_stats;
 	std::vector <Attack*> gear;
@@ -86,7 +90,8 @@ public:
 	void InitUnit();
 	int setInitiative();
 	Attack* Hit();
-	void SetStat(int damage, std::vector<int> &baff);
+	void SetStat(int damage, const std::vector<int>& baff = {});
+	int SpecialAbility();
 	void info(); //ctrl+c from previous task;
 	void replica();
 };
@@ -96,9 +101,15 @@ public:
 	void InitUnit();
 	int setInitiative();
 	Attack* Hit();
-	void SetStat(int damage, std::vector<int> &baff);
+	void SetStat(int damage, const std::vector<int>& baff = {});
+	int SpecialAbility();
+	void Fire_Ball(int damage);
+	void Hilling(Unit& Player);
 	void info(); //ctrl+c from previous task;
 	void replica();
+private:
+	// levels required for each ability;
+	std::vector <int> spec_ab;
 };
 
 class Berserk :public Unit {
@@ -106,7 +117,8 @@ public:
 	void InitUnit();
 	int setInitiative();
 	Attack* Hit();
-	void SetStat(int damage, std::vector<int> &baff);
+	void SetStat(int damage, const std::vector<int>& baff = {});
+	int SpecialAbility();
 	void info(); //ctrl+c from previous task;
 	void replica();
 };
