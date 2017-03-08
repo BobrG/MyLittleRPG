@@ -1,7 +1,16 @@
 #include <iostream>
 #include <random>
 #include <iomanip>
+#include "Game.h"
 #include "Unit.h"
+
+// heads of tails function;
+int h_or_t() {
+	std::random_device rd;
+	std::mt19937 mt;
+	std::uniform_int_distribution<int> dist(1,2);
+	return dist(mt);
+}
 
 void list() {
 	std::cout << " 1 - Wizard" << std::endl;
@@ -15,7 +24,7 @@ void create(int key, Unit** u) {
 		*u = new Wizard;
 	}
 	else if (key == 2) {
-		*u = new Warrior;
+		*u = new Berserk;
 	}
 	else if (key == 3) {
 		*u = new Paladin;
@@ -84,6 +93,32 @@ void SingleArena(Unit* Player) {
 
 }
 
+/*Create five classes with special abilities.
+  For now I can think of these:
+  1. Warrior - specials: Rage, Multiple attack, etc
+  2. Mage - specials: Power of Nature, Hilling, etc
+  3. Defender - specials: Shield, Defend nearbyes, etc
+  4. Paladin - specials: Blessing baff, Rising undead, etc
+  5. Demon Slayer - specials: Calling for Dead, Cast a sucuub, etc
+  
+  Create a step-to-step attack:
+  every character can use one of type of attacks
+  1. Normal attack. (increases *inspiration*)
+     Random special of weapon. (is included to 1.)
+  2.Special class attack (requires amount of *inspiration*)
+  3.Use a special item.
+  Also you should choose the target of your attack - defence or health;
+  Each attack requires the stamina, which grows on every step and 
+  decreases with every attack;
+  Attacking the defence requires less stamina than attacking health.
+  Also there will be an initiation in attack(who strikes first), which defines by random;
+  In summary we need to include three parametres to Unit class description:
+  - stamina
+  - inspiration
+  - initiation
+  
+  */
+
 void TeamArena(Unit* Player) {
 	std::vector <Unit*> Opponents;
 	std::vector <Unit*> Players;
@@ -111,6 +146,35 @@ void TeamArena(Unit* Player) {
 		create(key, &Opponents[i]);
 	}
 
+	std::cout << "Choose the order of team's attack:" << std::endl;
+	std::cout << "1 - Player's team strikes first." << std::endl;
+	std::cout << "2 - Opponent's team strikes first." << std::endl;
+	std::cout << "3 - Randomize." << std::endl;
+	int key = 0;
+	std::cin >> key;
+	if (key == 3) {
+		key = h_or_t();
+	}
+
+	std::cout << "Define the order in which your team will fight." << std::endl;
+	for (int i = 0; i < Players.size(); ++i) {
+		std::cout << "Player #" << i + 1 << std::endl;
+		Players[i]->UnitMenu();
+		std::cout << std::endl;
+	}
+	for (int i = 0; i < Players.size(); ++i) {
+		int k;
+		std::cout << "Who goes #" << i+1  << "?" << std::endl;
+		std::cin >> k;
+		if (k < Players.size()) {
+			std::swap(Players[i], Players[k]);
+		}
+		else
+		{
+			//exception 1;
+		}
+	}
+	std::cout << "Define opponents to your teammates." << std::endl;
 	if (num_pl > num_opp) {
 		num_min = num_opp;
 		num_max = num_pl;
@@ -126,6 +190,7 @@ void TeamArena(Unit* Player) {
 		std::cout << "Opponent #" << i + 1 << std::endl;
 		Opponents[i]->UnitMenu();
 	}
+	
 	if (Opponents.size() > Players.size()) {
 		for (int i = num_min; i < num_max; ++i) {
 			std::cout << "Opponent #" << i + 1 << std::endl;
@@ -139,9 +204,8 @@ void TeamArena(Unit* Player) {
 		}
 	}
 
-	std::cout << "Choose the order of team's attack:" << std::endl;
-	std::cout << "Player's team strikes first." << std::endl;
-	std::cout << "Opponent's team strikes first." << std::endl;
+
+
 
 
 }

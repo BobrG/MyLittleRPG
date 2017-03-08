@@ -32,6 +32,10 @@ public:
 
 	int getHealth(); //get unit's HP;
 
+	
+
+	virtual int setInitiative() = 0;//sets unit's initiative before each battle;
+
 	/* Function replica():
 	*  virtual void function, throws a unit's sentence.
 	*  Inheritance in classes of each hero.
@@ -53,15 +57,25 @@ public:
 	virtual ~Unit() = default; //destructor, undefined yet;
 protected:
 	/* Unit's data/status:
+	*  type - unit's class;
+	*  name - unit's name, designed by user;
 	*  HP - character's health points;
-	*  DF - character's defence points; NOT USED YET!!!ÿ	
+	*  DF - character's defence points; NOT USED YET!!!	
+	*  init_max - max initiative in a range; 
+	*  battle_stats - vector of special unit's stats used in battle:
+	*  [0] - initiation;
+	*  [1] - stamina;
+	*  [2] - inspiration;
 	*  TODO: Create units profile, which will save and represent
 	*  unit's info in more appropriate way.
 	*/
 	std::string type;
+	std::string name;
 	int HP;
 	int DF;
+	int init_max;
 	int level;
+	std::vector<int> battle_stats;
 	std::vector <Attack*> gear;
 	// Diez simbol is used to represent info. about character's data.
 	char InfoBlock = '#';
@@ -70,6 +84,7 @@ protected:
 class Paladin :public Unit {
 public:
 	void InitUnit();
+	int setInitiative();
 	Attack* Hit();
 	void SetStat(int damage, std::vector<int> &baff);
 	void info(); //ctrl+c from previous task;
@@ -79,15 +94,17 @@ public:
 class Wizard :public Unit {
 public:
 	void InitUnit();
+	int setInitiative();
 	Attack* Hit();
 	void SetStat(int damage, std::vector<int> &baff);
 	void info(); //ctrl+c from previous task;
 	void replica();
 };
 
-class Warrior :public Unit {
+class Berserk :public Unit {
 public:
 	void InitUnit();
+	int setInitiative();
 	Attack* Hit();
 	void SetStat(int damage, std::vector<int> &baff);
 	void info(); //ctrl+c from previous task;
