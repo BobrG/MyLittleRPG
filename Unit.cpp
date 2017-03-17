@@ -8,13 +8,15 @@
 #include <random>
 
 void Unit::InitUnit() {
-	HP = 250;
-	DF = 100;
-
+	
 }
 
 int Unit::getHealth() {
 	return HP;
+}
+
+bool Unit::is_Dead() {
+	return (HP <= 0);
 }
 
 void Unit::SetStat(int damage, const std::vector<int>& baff = {}) {
@@ -88,9 +90,17 @@ void Unit::UnitMenu() {
 	std::cout << battle_stats[2];
 	temp = std::to_string(battle_stats[2]);
 	std::cout << std::setw(n - temp.size() - 4) << std::right << std::setfill('_') << "|" << std::endl;
-
-
+	
 	std::cout << "|" << std::setw(2 * n) << std::right << std::setfill('_') << "|" << std::endl;
+}
+
+Attack* Unit::Hit(int i) {
+	replica();
+	if (i > gear.size()) {
+		return 0;
+	}
+	else
+	return gear[i];
 }
 
 void Paladin::InitUnit() {
@@ -102,9 +112,12 @@ void Paladin::InitUnit() {
 	level = 0;
 	init_max = 25;
 	battle_stats.resize(3);
-	battle_stats[0] = 1;
-	battle_stats[1] = 100;
-	battle_stats[2] = 100;
+	battle_stats[0] = 1;// start initiation;
+	battle_stats[1] = 100;// start stamina; 
+	battle_stats[2] = 100;// start inspiration;
+	spec_ab = { 1,3,7 };
+	gear.resize(1);
+
 }
 
 int Paladin::setInitiative() {
@@ -164,25 +177,24 @@ void Paladin::info(){
 	std::cout << std::endl;
 }
 
-void Paladin::SetStat(int damage, const std::vector<int>& baff = {}) {
+void Paladin::SetStat(int damage, const std::vector<Buff>& baff = {}) {
 	HP -= damage;
-	battle_stats[1] -= baff[0];
-	if (baff[1]) {
-		HP += baff[1];
-	}
-	if (baff[2]) {
-		HP *= baff[2];
-	}
-	if (baff[3]) {
-		//something special *_*
-	}
+	baff[0].CauseEffect(HP);
 
 }
 
-int Paladin::SpecialAbility() {
-	
+// NOT IMPLEMENTED YET!!!
 
-	
+Skills* Paladin::LearnSkill() {
+	if (level == spec_ab[0]) {
+		return new Blessing;
+	}
+	if (level == spec_ab[1]) {
+
+	}
+	if (level == spec_ab[2]) {
+
+	}
 }
 
 void Paladin::replica() {
@@ -198,10 +210,10 @@ void Paladin::replica() {
 
 }
 
-Attack* Paladin::Hit() {
-	replica();
-	return new Shield();
-}
+//Attack* Paladin::Hit(int i) {
+//	replica();
+//	return new Shield();
+//}
 
 void Wizard::InitUnit() {
 	type = "Wizard";
@@ -215,7 +227,11 @@ void Wizard::InitUnit() {
 	battle_stats[0] = 1;
 	battle_stats[1] = 100;
 	battle_stats[2] = 100;
-	spec_ab = {1,3,6};
+	spec_ab = { 1,3,6 };
+	gear.resize(1);
+	Staff* obj;
+	gear[0] = obj;
+
 }
 
 int Wizard::setInitiative() {
@@ -303,18 +319,24 @@ void Wizard::SetStat(int damage, const std::vector<int>& baff = {}) {
 	}
 }
 
-//void Wizard::Hilling(Unit& Player) {
-//	std::random_device rd;
-//	std::mt19937 mt;
-//	// add max_hilling and min_hilling. description where ???
-//	std::uniform_int_distribution<int> dist(min_hil, max_hil);
-//	Player.SetStat(-dist(mt));
-//}
+// NOT IMPLEMENTED YET!!!
 
-Attack* Wizard::Hit() {
-	replica();
-	return new Spell();
+Skills* Wizard::LearnSkill() {
+	if (level == spec_ab[0]) {
+		return new FireBall;
+	}
+	if (level == spec_ab[1]) {
+
+	}
+	if (level == spec_ab[2]) {
+
+	}
 }
+
+//Attack* Wizard::Hit(int i) {
+//	replica();
+//	return gear[i];
+//}
 
 void Berserk::InitUnit() {
 	type = "Berserk";
@@ -328,6 +350,10 @@ void Berserk::InitUnit() {
 	battle_stats[0] = 1;
 	battle_stats[1] = 100;
 	battle_stats[2] = 100;
+	spec_ab = { 1,4,5 };
+	gear.resize(1);
+	Sword* obj;
+	gear[0] = obj;
 }
 
 int Berserk::setInitiative() {
@@ -401,7 +427,7 @@ void Berserk::replica() {
 
 }
 
-void Berserk::SetStat(int damage, std::vector<int> &baff) {
+void Berserk::SetStat(int damage, const std::vector<int>& baff = {}) {
 	HP -= damage;
 	battle_stats[1] -= baff[0];
 	if (baff[1]) {
@@ -415,12 +441,26 @@ void Berserk::SetStat(int damage, std::vector<int> &baff) {
 	}
 }
 
-int Berserk::SpecialAbility() {
+// NOT IMPLEMENTED YET!!!
 
+Skills* Berserk::LearnSkill() {
+	if (level == spec_ab[0]) {
+		return new Rage;
+	}
+	if (level == spec_ab[1]) {
+
+	}
+	if (level == spec_ab[2]) {
+
+	}
 }
 
-Attack* Berserk::Hit() {
-	replica();
-	return new Rage();
-}
+//Attack* Berserk::Hit(int i) {
+//	replica();
+//	if (i > gear.size()) {
+//		return 0;
+//	}
+//	else
+//	return gear[i];
+//}
 

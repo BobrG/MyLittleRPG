@@ -58,8 +58,10 @@ void SingleArena(Unit* Player) {
 	create(key, &Opponent);
 	//if (!key) { return 0; }
 	Opponent->InitUnit();
-	Attack* pl_hit = Player->Hit();
-	Attack* opp_hit = Opponent->Hit();
+	int ind_pl = 0;
+	int ind_opp = 0;
+	Attack* pl_hit = Player->Hit(ind_pl);
+	Attack* opp_hit = Opponent->Hit(ind_opp);
 
 	for (int i = 0; AnyAlive(Player, Opponent); ++i) {
 		int pl_dmg, opp_dmg;

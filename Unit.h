@@ -1,6 +1,7 @@
 #pragma once
 #include <random>
 #include <vector>
+#include "Skills.h"
 #include "Weapons.h"
 
 typedef std::vector<Attack*> Weapons;
@@ -8,16 +9,20 @@ typedef std::vector<Attack*> Weapons;
 class Unit {
 public:
 	/* Function Hit():
-	*  virtual function, which creates and returnes an object
-	*  of class Attack - hero's weapon.
+	*  returnes pointer on object of class Attack - heroe's weapon.
+	*  Index i determines number of required element 
+	*  in the vector of weapons;
 	*/
 
-	virtual Attack* Hit() = 0; //return character's weapon;
+    Attack* Hit(int i); //return character's weapon;
+
+	//virtual void TakeItem(Item& it);
 
 	/* Function InitUnit(): 
 	*  void function, which is called once to initialize 
 	*  units start status.
 	*/
+
 	virtual void InitUnit(); //initialization of unit;
 
 	/* Function info():
@@ -27,14 +32,14 @@ public:
 
 	virtual void info() = 0; //info about units stats;
 
-	/* Function getHealth(): 
-	*  Cacrries out encapsulating of unit's data [1].
-	*  Returns unit's health points.
-	*/
-
 	int getHealth(); //get unit's HP;
 
-	virtual int SpecialAbility() = 0;
+	bool is_Dead();
+
+	/* Function LearnSkill():
+	*  
+	*/
+	virtual Skills* LearnSkill() = 0;
 
 	virtual int setInitiative() = 0;//sets unit's initiative before each battle;
 
@@ -69,8 +74,6 @@ protected:
 	*  [0] - initiation;
 	*  [1] - stamina;
 	*  [2] - inspiration;
-	*  TODO: Create units profile, which will save and represent
-	*  unit's info in more appropriate way.
 	*/
 	std::string type;
 	std::string name;
@@ -81,6 +84,7 @@ protected:
 	int level;
 	std::vector<int> battle_stats;
 	std::vector <Attack*> gear;
+	std::vector <Skills*> skill;
 	// Diez simbol is used to represent info. about character's data.
 	char InfoBlock = '#';
 };
@@ -89,22 +93,21 @@ class Paladin :public Unit {
 public:
 	void InitUnit();
 	int setInitiative();
-	Attack* Hit();
-	void SetStat(int damage, const std::vector<int>& baff = {});
-	int SpecialAbility();
-	void info(); //ctrl+c from previous task;
+	Skills* LearnSkill();
+	void SetStat(int damage, const std::vector<Buff>& baff = {});
+	void info();
 	void replica();
+private:
+	// levels required for each ability;
+	std::vector <int> spec_ab;
 };
 
 class Wizard :public Unit {
 public:
 	void InitUnit();
 	int setInitiative();
-	Attack* Hit();
-	void SetStat(int damage, const std::vector<int>& baff = {});
-	int SpecialAbility();
-	void Fire_Ball(int damage);
-	void Hilling(Unit& Player);
+	void SetStat(int damage, const std::vector<Buff>& baff = {});
+	Skills* LearnSkill();
 	void info(); //ctrl+c from previous task;
 	void replica();
 private:
@@ -116,10 +119,14 @@ class Berserk :public Unit {
 public:
 	void InitUnit();
 	int setInitiative();
-	Attack* Hit();
-	void SetStat(int damage, const std::vector<int>& baff = {});
-	int SpecialAbility();
+	
+	void SetStat(int damage, const std::vector<Buff>& baff = {});
+	Skills* LearnSkill();
 	void info(); //ctrl+c from previous task;
 	void replica();
+private:
+	// levels required for each ability;
+	std::vector <int> spec_ab;
+
 };
 
