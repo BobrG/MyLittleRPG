@@ -1,18 +1,24 @@
 #pragma once
+#include <string>
 #include "Unit.h"
 //class of buffs
 class Buff {
 public:
+	std::string type;
+
 	virtual void Init_Buff();
-	virtual void ApplyEffect(int stat);
+	
+	virtual void Apply_Effect(int stat);
+   
+	std::string Return_Type();
 	virtual ~Buff() = default;
 };
 
 
 class Poisoning :public Buff {
 public:
-	void Init_Buff(int dmg);
-	void ApplyEffect(int stat);
+	void Init_Buff(int dmg, int n);
+	void Apply_Effect(int stat);
 
 private:
 	int dmg;
@@ -22,7 +28,7 @@ private:
 class Burning :public Buff {
 public:
 	void Init_Buff(int damage, int n);
-	void ApplyEffect(int stat);
+	void Apply_Effect(int stat);
 	
 private:
 	int dmg;

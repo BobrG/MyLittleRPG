@@ -1,4 +1,7 @@
+
+#include <string>
 #include "Skills.h"
+
 
 void FireBall::CauseEffect(Unit& Opponent) {
 	std::random_device rd;
@@ -14,16 +17,25 @@ void FireBall::CauseEffect(Unit& Opponent) {
 //	return buff;
 //}
 
+std::string Buff::Return_Type() {
+	return type;
+}
+
 void Burning::Init_Buff(int damage, int n) {
+	type = "hp";
 	dmg = damage;
 	num_steps = n;
 	on = true;
 }
 
-void Burning::ApplyEffect(int stat) {
+void Burning::Apply_Effect(int stat) {
 	stat -= dmg;
 }
 
-void Poisoning::ApplyEffect(int stat) {
+void Poisoning::Init_Buff(int damage, int n) {
+
+}
+
+void Poisoning::Apply_Effect(int stat) {
 	stat -= dmg;
 }

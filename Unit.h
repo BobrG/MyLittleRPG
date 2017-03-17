@@ -94,7 +94,7 @@ public:
 	void InitUnit();
 	int setInitiative();
 	Skills* LearnSkill();
-	void SetStat(int damage, const std::vector<Buff>& baff = {});
+	void SetStat(int damage, std::vector<Buff>& baff = {});
 	void info();
 	void replica();
 private:
@@ -106,7 +106,7 @@ class Wizard :public Unit {
 public:
 	void InitUnit();
 	int setInitiative();
-	void SetStat(int damage, const std::vector<Buff>& baff = {});
+	void SetStat(int damage, std::vector<Buff>& baff = {});
 	Skills* LearnSkill();
 	void info(); //ctrl+c from previous task;
 	void replica();
@@ -120,7 +120,7 @@ public:
 	void InitUnit();
 	int setInitiative();
 	
-	void SetStat(int damage, const std::vector<Buff>& baff = {});
+	void SetStat(int damage, std::vector<Buff>& baff = {});
 	Skills* LearnSkill();
 	void info(); //ctrl+c from previous task;
 	void replica();

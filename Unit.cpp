@@ -19,7 +19,7 @@ bool Unit::is_Dead() {
 	return (HP <= 0);
 }
 
-void Unit::SetStat(int damage, const std::vector<int>& baff = {}) {
+void Unit::SetStat(int damage, const std::vector<int>& buff = {}) {
 	HP -= damage;
 }
 
@@ -177,10 +177,21 @@ void Paladin::info(){
 	std::cout << std::endl;
 }
 
-void Paladin::SetStat(int damage, const std::vector<Buff>& baff = {}) {
+void Paladin::SetStat(int damage, std::vector<Buff>& buff = {}) {
 	HP -= damage;
-	baff[0].CauseEffect(HP);
+	for (int i = 0; i < buff.size(); ++i) {
+		if (buff[i].Return_Type() == "hp") {
+			buff[i].Apply_Effect(HP);
+		}
+		if (buff[i].Return_Type() == "df") {
+			buff[i].Apply_Effect(DF);
+		}
+		if (buff[i].Return_Type() == "st") {
+			buff[i].Apply_Effect(battle_stats[1]);
+		}
 
+	}
+	
 }
 
 // NOT IMPLEMENTED YET!!!
@@ -305,16 +316,16 @@ void Wizard::replica() {
 
 }
 
-void Wizard::SetStat(int damage, const std::vector<int>& baff = {}) {
+void Wizard::SetStat(int damage, std::vector<Buff>& buff = {}) {
 	HP -= damage;
-	battle_stats[1] -= baff[0];
-	if (baff[1]) {
-		HP += baff[1];
+	battle_stats[1] -= buff[0];
+	if (buff[1]) {
+		HP += buff[1];
 	}
-	if (baff[2]) {
-		HP *= baff[2];
+	if (buff[2]) {
+		HP *= buff[2];
 	}
-	if (baff[3]) {
+	if (buff[3]) {
 		//something special ^_^
 	}
 }
@@ -427,16 +438,16 @@ void Berserk::replica() {
 
 }
 
-void Berserk::SetStat(int damage, const std::vector<int>& baff = {}) {
+void Berserk::SetStat(int damage, std::vector<Buff>& buff = {}) {
 	HP -= damage;
-	battle_stats[1] -= baff[0];
-	if (baff[1]) {
-		HP += baff[1];
+	battle_stats[1] -= buff[0];
+	if (buff[1]) {
+		HP += buff[1];
 	}
-	if (baff[2]) {
-		HP *= baff[2];
+	if (buff[2]) {
+		HP *= buff[2];
 	}
-	if (baff[3]) {
+	if (buff[3]) {
 		//something special <3
 	}
 }
