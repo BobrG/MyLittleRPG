@@ -4,37 +4,35 @@
 //class of buffs
 class Buff {
 public:
-	std::string type;
 
-	virtual void Init_Buff();
+	virtual void Init_Buff(int eff, int n, std::string type_);
 	
 	virtual void Apply_Effect(int stat);
    
 	std::string Return_Type();
+
+	bool Is_On();
+
 	virtual ~Buff() = default;
+protected:
+	int effect;
+	int num_steps;	
+	std::string type;
 };
 
-
-class Poisoning :public Buff {
+class Debuff:public Buff {
 public:
-	void Init_Buff(int dmg, int n);
-	void Apply_Effect(int stat);
 
-private:
-	int dmg;
-	int num_steps;
+    void Init_Buff(int dmg, int n, std::string type_);
+
+    void Apply_Effect(int stat);
+
+	std::string Return_Type();
+
+	bool Is_On();
+
 };
 
-class Burning :public Buff {
-public:
-	void Init_Buff(int damage, int n);
-	void Apply_Effect(int stat);
-	
-private:
-	int dmg;
-	int num_steps;
-	bool on;
-};
 // class special skills 
 class Skills {
 public:
@@ -44,9 +42,9 @@ public:
 class FireBall : public Skills {
 public:
 	void CauseEffect(Unit& Player);
-	Burning ReturnBaff();
+	Debuff ReturnBaff();
 private:
-	Burning buff;
+	Debuff buff;
 	int min_dmg = 10;
 	int max_dmg = 50;
 };

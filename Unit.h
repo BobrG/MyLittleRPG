@@ -56,7 +56,7 @@ public:
 	*  adds baff and some special abilities of each hero.
 	*/
 
-	virtual void SetStat(int damage, const std::vector<int>& baff = {}); //updates hero's stats 
+	void SetStat(int damage,const Buff& buff_); //updates hero's stats 
 
 	virtual void UnitMenu();
 
@@ -85,6 +85,7 @@ protected:
 	std::vector<int> battle_stats;
 	std::vector <Attack*> gear;
 	std::vector <Skills*> skill;
+	std::vector<Buff> buff;
 	// Diez simbol is used to represent info. about character's data.
 	char InfoBlock = '#';
 };
@@ -94,7 +95,6 @@ public:
 	void InitUnit();
 	int setInitiative();
 	Skills* LearnSkill();
-	void SetStat(int damage, std::vector<Buff>& baff = {});
 	void info();
 	void replica();
 private:
@@ -106,7 +106,6 @@ class Wizard :public Unit {
 public:
 	void InitUnit();
 	int setInitiative();
-	void SetStat(int damage, std::vector<Buff>& baff = {});
 	Skills* LearnSkill();
 	void info(); //ctrl+c from previous task;
 	void replica();
@@ -119,10 +118,8 @@ class Berserk :public Unit {
 public:
 	void InitUnit();
 	int setInitiative();
-	
-	void SetStat(int damage, std::vector<Buff>& baff = {});
 	Skills* LearnSkill();
-	void info(); //ctrl+c from previous task;
+	void info();
 	void replica();
 private:
 	// levels required for each ability;

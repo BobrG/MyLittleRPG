@@ -19,9 +19,33 @@ bool Unit::is_Dead() {
 	return (HP <= 0);
 }
 
-void Unit::SetStat(int damage, const std::vector<int>& buff = {}) {
+void Unit::SetStat(int damage, const Buff& buff_) {
 	HP -= damage;
+
+	buff.push_back(buff_);
+	
+	for (int i = 0; i < buff.size(); ++i) {
+		// applying buffs to unit;
+		if (buff[i].Is_On()) {
+			if (buff[i].Return_Type() == "hp") {
+				buff[i].Apply_Effect(HP);
+			}
+			if (buff[i].Return_Type() == "df") {
+				buff[i].Apply_Effect(DF);
+			}
+			if (buff[i].Return_Type() == "st") {
+				buff[i].Apply_Effect(battle_stats[1]);
+			}
+		}
+		else {
+			// when buff's effects end we delete them from vector of buffs; 
+			buff[i].~Buff();
+			buff.erase(buff.begin() + i);
+		}
+	}
+
 }
+
 
 void Unit::UnitMenu() {
 	int n = 24;
@@ -177,23 +201,6 @@ void Paladin::info(){
 	std::cout << std::endl;
 }
 
-void Paladin::SetStat(int damage, std::vector<Buff>& buff = {}) {
-	HP -= damage;
-	for (int i = 0; i < buff.size(); ++i) {
-		if (buff[i].Return_Type() == "hp") {
-			buff[i].Apply_Effect(HP);
-		}
-		if (buff[i].Return_Type() == "df") {
-			buff[i].Apply_Effect(DF);
-		}
-		if (buff[i].Return_Type() == "st") {
-			buff[i].Apply_Effect(battle_stats[1]);
-		}
-
-	}
-	
-}
-
 // NOT IMPLEMENTED YET!!!
 
 Skills* Paladin::LearnSkill() {
@@ -316,22 +323,6 @@ void Wizard::replica() {
 
 }
 
-void Wizard::SetStat(int damage, std::vector<Buff>& buff = {}) {
-	HP -= damage;
-	battle_stats[1] -= buff[0];
-	if (buff[1]) {
-		HP += buff[1];
-	}
-	if (buff[2]) {
-		HP *= buff[2];
-	}
-	if (buff[3]) {
-		//something special ^_^
-	}
-}
-
-// NOT IMPLEMENTED YET!!!
-
 Skills* Wizard::LearnSkill() {
 	if (level == spec_ab[0]) {
 		return new FireBall;
@@ -436,20 +427,6 @@ void Berserk::replica() {
 	SetConsoleTextAttribute(hstdout, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 	std::cout << std::endl;
 
-}
-
-void Berserk::SetStat(int damage, std::vector<Buff>& buff = {}) {
-	HP -= damage;
-	battle_stats[1] -= buff[0];
-	if (buff[1]) {
-		HP += buff[1];
-	}
-	if (buff[2]) {
-		HP *= buff[2];
-	}
-	if (buff[3]) {
-		//something special <3
-	}
 }
 
 // NOT IMPLEMENTED YET!!!
