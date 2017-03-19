@@ -5,8 +5,6 @@
 
 void menu(Unit* u);
 
-int h_or_t();
-
 void list();
 
 void create(int key, Unit** u);

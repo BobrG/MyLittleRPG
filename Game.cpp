@@ -129,7 +129,9 @@ void TeamArena(Unit* Player) {
 	std::vector <Unit*> Players;
 	int summ_pl, summ_opp = 0;
 	int num_opp, num_pl, num_min, num_max;
-	std::cout << "Input size of your team: (take your character in account too)" << std::endl;
+
+
+	std::cout << "Hire your teammates!" << std::endl << "How much do you need?" << std::endl;
 	std::cin >> num_pl;
 	Players.resize(num_pl); 
 	summ_pl = Player->setInitiative();
@@ -142,6 +144,7 @@ void TeamArena(Unit* Player) {
 		summ_pl += Players[i]->setInitiative();
 	}
 	Players.insert(Players.begin(),Player);
+
 
 	std::cout << "Input size of your opponent team:" << std::endl;
 	std::cin >> num_opp;
@@ -174,6 +177,8 @@ void TeamArena(Unit* Player) {
 			//exception 1;
 		}
 	}
+
+
 	std::cout << "Define opponents to your teammates." << std::endl;
 	if (num_pl > num_opp) {
 		num_min = num_opp;
