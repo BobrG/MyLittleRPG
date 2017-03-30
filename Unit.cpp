@@ -19,33 +19,26 @@ bool Unit::is_Dead() {
 	return (HP <= 0);
 }
 
-void Unit::SetStat(int damage, const Buff& buff_) {
+void Unit::SetStat(int damage, Buff& buff_) {
 	HP -= damage;
-
-	buff.push_back(buff_);
-	
-	for (int i = 0; i < buff.size(); ++i) {
+	//Buff tmp_buff = buff_;
+	spec_eff.push_back(&buff_);
+	for (int i = 0; i < spec_eff.size(); ++i) {
 		// applying buffs to unit;
-		if (buff[i].Is_On()) {
-			if (buff[i].Return_Type() == "hp") {
-				buff[i].Apply_Effect(HP);
-			}
-			if (buff[i].Return_Type() == "df") {
-				buff[i].Apply_Effect(DF);
-			}
-			if (buff[i].Return_Type() == "st") {
-				buff[i].Apply_Effect(battle_stats[1]);
+		if (spec_eff[i]->Is_On()) {
+			if (spec_eff[i]->Return_Type() == "hp") {
+				spec_eff[i]->Apply_Effect(HP);
 			}
 		}
 		else {
 			// when buff's effects end we delete them from vector of buffs; 
-			buff[i].~Buff();
-			buff.erase(buff.begin() + i);
+			spec_eff[i]->~Buff();
+			spec_eff.erase(spec_eff.begin() + i);
 		}
 	}
 
-}
 
+}
 
 void Unit::UnitMenu() {
 	int n = 24;
@@ -205,7 +198,7 @@ void Paladin::info(){
 
 Skills* Paladin::LearnSkill() {
 	if (level == spec_ab[0]) {
-		return new Blessing;
+		//return new Blessing;
 	}
 	if (level == spec_ab[1]) {
 
@@ -248,7 +241,7 @@ void Wizard::InitUnit() {
 	spec_ab = { 1,3,6 };
 	gear.resize(1);
 	Staff* obj;
-	gear[0] = obj;
+//	gear[0] = obj;
 
 }
 
@@ -325,7 +318,7 @@ void Wizard::replica() {
 
 Skills* Wizard::LearnSkill() {
 	if (level == spec_ab[0]) {
-		return new FireBall;
+	//	return new FireBall;
 	}
 	if (level == spec_ab[1]) {
 
@@ -354,8 +347,8 @@ void Berserk::InitUnit() {
 	battle_stats[2] = 100;
 	spec_ab = { 1,4,5 };
 	gear.resize(1);
-	Sword* obj;
-	gear[0] = obj;
+	//Sword* obj;
+	//gear[0] = obj;
 }
 
 int Berserk::setInitiative() {
@@ -433,7 +426,7 @@ void Berserk::replica() {
 
 Skills* Berserk::LearnSkill() {
 	if (level == spec_ab[0]) {
-		return new Rage;
+	//	return new Rage;
 	}
 	if (level == spec_ab[1]) {
 

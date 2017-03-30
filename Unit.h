@@ -5,6 +5,8 @@
 #include "Weapons.h"
 
 typedef std::vector<Attack*> Weapons;
+//typedef std::vector <Skills*> SkArr;
+class Skills;
 
 class Unit {
 public:
@@ -16,6 +18,7 @@ public:
 
     Attack* Hit(int i); //return character's weapon;
 
+	// IMPLEMENT ITEM SYSTEM (ARMOR WITH BUFFS, SPECIAL STATS, ETC);
 	//virtual void TakeItem(Item& it);
 
 	/* Function InitUnit(): 
@@ -34,14 +37,14 @@ public:
 
 	int getHealth(); //get unit's HP;
 
-	bool is_Dead();
+	bool is_Dead();// returns true whether unit is dead;
 
 	/* Function LearnSkill():
 	*  
 	*/
 	virtual Skills* LearnSkill() = 0;
 
-	virtual int setInitiative() = 0;//sets unit's initiative before each battle;
+	virtual int setInitiative() = 0;//sets and returns unit's initiative before each battle;
 
 	/* Function replica():
 	*  virtual void function, throws a unit's sentence.
@@ -56,12 +59,18 @@ public:
 	*  adds baff and some special abilities of each hero.
 	*/
 
-	void SetStat(int damage,const Buff& buff_); //updates hero's stats 
+	void SetStat(int damage, Buff& buff_); //updates hero's stats 
+
+	/* Function UnitMenu()
+	*  void function which displays all stats
+	*  of character in "beautifully designed window".
+	*/
 
 	virtual void UnitMenu();
 
 	// not finished yet;
 	virtual ~Unit() = default; //destructor, undefined yet;
+
 protected:
 	/* Unit's data/status:
 	*  type - unit's class;
@@ -74,6 +83,9 @@ protected:
 	*  [0] - initiation;
 	*  [1] - stamina;
 	*  [2] - inspiration;
+	*  gear - vector of weapons(pointers on class Attack);
+	*  skill - vector of special skills unique for each unit;
+	*  buff - vector of side effects(pointers on elements of class Buff);
 	*/
 	std::string type;
 	std::string name;
@@ -83,9 +95,9 @@ protected:
 	int min_insp;
 	int level;
 	std::vector<int> battle_stats;
-	std::vector <Attack*> gear;
-	std::vector <Skills*> skill;
-	std::vector<Buff> buff;
+	std::vector<Buff*> spec_eff;
+	Weapons gear;
+//	SkArr skill;
 	// Diez simbol is used to represent info. about character's data.
 	char InfoBlock = '#';
 };

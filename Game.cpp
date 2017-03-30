@@ -4,6 +4,8 @@
 #include "Game.h"
 #include "Unit.h"
 
+typedef std::vector<Unit*> UnArr;
+
 void list() {
 	std::cout << " 1 - Wizard" << std::endl;
 	std::cout << " 2 - Warrior" << std::endl;
@@ -49,6 +51,34 @@ void Arena(Unit* Player) {
 	
 }
 
+
+void Battle(Unit* Player, Unit* Opponent) {
+	int init_pl = Player->setInitiative();
+	int init_opp = Opponent->setInitiative();
+	int ind_pl = 0;
+	int ind_opp = 0;
+	for (int i = 0; AnyAlive(Player, Opponent); ++i) {
+		std::cout << "Step #" << i + 1 << std::endl;
+		if (init_pl >= init_opp) {
+			std::cout << "Choose your attack:" << std::endl;
+			std::cout << "|" << std::setw(12) << std::setfill('_') << "1 - Slice";
+			std::cout << std::setw(18) << std::setfill('_') << std::endl;
+			std::cout << "|" << std::setw(12) << std::setfill('_') << "2 - Rape";
+			std::cout << std::setw(18) << std::setfill('_') << std::endl;
+			std::cout << "Choose your attack:" << std::endl;
+			std::cout << "|" << std::setw(12) << std::setfill('_') << "3 - Use Special Powers";
+			std::cout << std::setw(12) << std::setfill('_') << std::endl;
+			Attack* pl_hit = Player->Hit(ind_pl);
+			
+		}
+		else
+		{
+		}
+
+	}
+}
+
+
 void SingleArena(Unit* Player) {
 	Unit* Opponent = NULL;
 	int key = 0;
@@ -63,22 +93,24 @@ void SingleArena(Unit* Player) {
 	Attack* pl_hit = Player->Hit(ind_pl);
 	Attack* opp_hit = Opponent->Hit(ind_opp);
 
-	for (int i = 0; AnyAlive(Player, Opponent); ++i) {
-		int pl_dmg, opp_dmg;
-		std::cout << "Round #" << i + 1 << std::endl;
-		Player->info();
-		Opponent->info();
+	Battle(Player, Opponent);
 
-		std::cout << "Player attacks: " << std::endl;
-		pl_dmg = pl_hit->attack();// player attacks;
-		opp_hit->fendoff(pl_dmg);// opponent fends off;
-		std::cout << "Opponent attacks: " << std::endl;
-		opp_dmg = opp_hit->attack();// opponent attacks;
-		pl_hit->fendoff(opp_dmg);// player fends off; 
+	//for (int i = 0; AnyAlive(Player, Opponent); ++i) {
+	//	int pl_dmg, opp_dmg;
+	//	std::cout << "Round #" << i + 1 << std::endl;
+	//	Player->info();
+	//	Opponent->info();
 
-		Opponent->SetStat(pl_dmg, opp_hit->GetBaff());
-		Player->SetStat(opp_dmg, pl_hit->GetBaff());
-	}
+	//	std::cout << "Player attacks: " << std::endl;
+	//	pl_dmg = pl_hit->attack();// player attacks;
+	//	opp_hit->fendoff(pl_dmg);// opponent fends off;
+	//	std::cout << "Opponent attacks: " << std::endl;
+	//	opp_dmg = opp_hit->attack();// opponent attacks;
+	//	pl_hit->fendoff(opp_dmg);// player fends off; 
+
+	//	Opponent->SetStat(pl_dmg, opp_hit->GetBaff());
+	//	Player->SetStat(opp_dmg, pl_hit->GetBaff());
+	//}
 
 	std::cout << "THE END OF FIGHT:" << std::endl;
 
