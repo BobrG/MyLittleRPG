@@ -140,8 +140,8 @@ void Battle(Unit* FirstPl, Unit* SecondPl) {
 		pl_dmg = pl1_hit->attack();
 		pl2_hit->fendoff(pl_dmg);
 
-		SecondPl->SetStat(pl_dmg, pl2_hit->GetBaff());
-		FirstPl->SetStat(0, pl1_hit->GetBaff());
+		SecondPl->setStat(pl_dmg, pl2_hit->GetBaff());
+		FirstPl->setStat(0, pl1_hit->GetBaff());
 
 		FirstPl->info();
 		SecondPl->info();
@@ -181,8 +181,8 @@ void Battle(Unit* FirstPl, Unit* SecondPl) {
 		pl_dmg = pl1_hit->attack();
 		pl2_hit->fendoff(pl_dmg);
 
-		FirstPl->SetStat(pl_dmg, pl2_hit->GetBaff());
-		SecondPl->SetStat(0, pl1_hit->GetBaff());
+		FirstPl->setStat(pl_dmg, pl2_hit->GetBaff());
+		SecondPl->setStat(0, pl1_hit->GetBaff());
 
 		SecondPl->info();
 		FirstPl->info();
@@ -217,7 +217,7 @@ void SingleArena(Unit* Player) {
 	std::cin >> key;
 	create(key, &Opponent);
 	//if (!key) { return 0; }
-	Opponent->InitUnit();
+	Opponent->initUnit();
 	Opponent->setAutoAttack(true);
 	//int ind_pl = 0;
 	//int ind_opp = 0;

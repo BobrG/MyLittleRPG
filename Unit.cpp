@@ -7,7 +7,7 @@
 #include <windows.h>
 #include <random>
 
-void Unit::InitUnit() {
+void Unit::initUnit() {
 	
 }
 
@@ -17,6 +17,11 @@ int Unit::getHealth() {
 
 bool Unit::is_Dead() {
 	return (HP <= 0);
+}
+
+void Unit::setName() {
+	std::cout << "What is your name adventurer?" << std::endl;
+	std::cin >> name;
 }
 
 void Unit::setAutoAttack(bool on) {
@@ -39,9 +44,9 @@ bool Unit::checkAutoAttack() {
 
 }
 
-void Unit::SetStat(int damage, Buffs& buff_) {
+void Unit::setStat(int damage, Buffs& buff_) {
 	HP -= damage;
-	//Buff tmp_buff = buff_;
+
 	if (!buff_.empty()) {
 		spec_eff.insert(spec_eff.end(), buff_.begin(), buff_.end());
 	}
@@ -91,7 +96,7 @@ int Unit::requiredStamina(int i, std::string type) {
 	}
 }
 
-void Unit::UnitMenu() {
+void Unit::unitMenu() {
 	int n = 24;
 	std::string temp;
 	std::cout << " " << std::setw(2 * n) << std::right << std::setfill('_') << " " << std::endl;
@@ -171,11 +176,9 @@ Attack* Unit::Hit(int i) {
 	return gear[i];
 }
 
-void Paladin::InitUnit() {
+void Paladin::initUnit() {
 	Shield* weapon = new Shield;
 	type = "Paladin";
-	std::cout << "What is your name adventurer?" << std::endl;
-	std::cin >> name;
 	HP = 300;
 	DF = 150;
 	level = 0;
@@ -183,7 +186,7 @@ void Paladin::InitUnit() {
 	battle_stats.resize(3);
 	battle_stats[0] = 1;// start initiation;
 	battle_stats[1] = 1000;// start stamina; 
-	battle_stats[2] = 100;// start inspiration;
+	battle_stats[2] = 10;// start inspiration;
 	spec_ab = { 1,3,7 };
 	gear.push_back(weapon);
 
@@ -278,11 +281,9 @@ void Paladin::replica() {
 //	return new Shield();
 //}
 
-void Wizard::InitUnit() {
+void Wizard::initUnit() {
 	Staff* weapon = new Staff;
 	type = "Wizard";
-	std::cout << "What is your name adventurer?" << std::endl;
-	std::cin >> name;
 	HP = 250;
 	DF = 50;
 	level = 0;
@@ -290,7 +291,7 @@ void Wizard::InitUnit() {
 	battle_stats.resize(3);
 	battle_stats[0] = 1;
 	battle_stats[1] = 1000;
-	battle_stats[2] = 100;
+	battle_stats[2] = 10;
 	spec_ab = { 1,3,6 };
 	gear.push_back(weapon);
 }
@@ -383,27 +384,58 @@ void Wizard::replica() {
 //	return gear[i];
 //}
 
-void Berserk::InitUnit() {
+void Berserk::initUnit() {
 	Sword* weapon = new Sword;
 	type = "Berserk";
-	std::cout << "What is your name adventurer?" << std::endl;
-	std::cin >> name;
 	HP = 350;
 	DF = 100;
 	level = 0;
 	init_max = 30;
+
+	std::random_device rd;
+	std::mt19937 mt;
+	std::uniform_int_distribution<int> dist(1, init_max);
+	std::uniform_int_distribution<int> dist1(1, 100);
+
 	battle_stats.resize(3);
 	battle_stats[0] = 1;
 	battle_stats[1] = 1000;
-	battle_stats[2] = 100;
+	battle_stats[2] = 10;
 	spec_ab = { 1,4,5 };
 	gear.push_back(weapon);
 }
 
+void Berserk::setStat(int damage, Buffs& buff_) {
+	
+	HP -= damage;
+
+	if (!buff_.empty()) {
+		spec_eff.insert(spec_eff.end(), buff_.begin(), buff_.end());
+	}
+	for (int i = 0; i < spec_eff.size(); ++i) {
+		// applying buffs to unit;
+		if (spec_eff[i]->Is_On()) {
+			if (spec_eff[i]->Return_Type() == "hp") {
+				spec_eff[i]->Apply_Effect(&HP);
+			}
+			if (spec_eff[i]->Return_Type() == "df") {
+				spec_eff[i]->Apply_Effect(&DF);
+			}
+			if (spec_eff[i]->Return_Type() == "st") {
+				spec_eff[i]->Apply_Effect(&battle_stats[1]);
+			}
+
+		}
+		else {
+			// when buff's effects end we delete them from vector of buffs; 
+			spec_eff[i]->~Buff();
+			spec_eff.erase(spec_eff.begin() + i);
+		}
+	}
+
+}
+
 int Berserk::setInitiative() {
-	std::random_device rd;
-	std::mt19937 mt;
-	std::uniform_int_distribution<int> dist(1, init_max);
 	return dist(mt);
 }
 
@@ -493,4 +525,217 @@ void Berserk::replica() {
 //	else
 //	return gear[i];
 //}
+
+void Defender::initUnit() {
+	Sword* weapon = new Sword;
+	type = "Defender";
+	HP = 250;
+	DF = 300;
+	level = 0;
+	init_max = 30;
+
+	std::random_device rd;
+	std::mt19937 mt;
+	std::uniform_int_distribution<int> dist(1, init_max);
+	std::uniform_int_distribution<int> dist1(1, 100);
+
+	battle_stats.resize(3);
+	battle_stats[0] = 1;
+	battle_stats[1] = 1000;
+	battle_stats[2] = 10;
+	spec_ab = { 1,4,5 };
+	gear.push_back(weapon);
+
+}
+
+void Defender::setStat(int damage, Buffs& buff_) {
+	
+	if (dist1(mt) > 25) {
+		HP -= (damage * 25) / 100;
+	}
+
+	if (!buff_.empty()) {
+		spec_eff.insert(spec_eff.end(), buff_.begin(), buff_.end());
+	}
+	for (int i = 0; i < spec_eff.size(); ++i) {
+		// applying buffs to unit;
+		if (spec_eff[i]->Is_On()) {
+			if (spec_eff[i]->Return_Type() == "hp") {
+				spec_eff[i]->Apply_Effect(&HP);
+			}
+			if (spec_eff[i]->Return_Type() == "df") {
+				spec_eff[i]->Apply_Effect(&DF);
+			}
+			if (spec_eff[i]->Return_Type() == "st") {
+				spec_eff[i]->Apply_Effect(&battle_stats[1]);
+			}
+
+		}
+		else {
+			// when buff's effects end we delete them from vector of buffs; 
+			spec_eff[i]->~Buff();
+			spec_eff.erase(spec_eff.begin() + i);
+		}
+	}
+
+
+}
+
+int Defender::setInitiative() {
+	std::random_device rd;
+	std::mt19937 mt;
+	std::uniform_int_distribution<int> dist(1, init_max);
+	return dist(mt);
+}
+
+void Defender::info() {
+	HANDLE hstdout = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+	GetConsoleScreenBufferInfo(hstdout, &csbi);
+	std::cout << "|_";
+	SetConsoleTextAttribute(hstdout, FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY);
+	std::cout << "Defender";
+	SetConsoleTextAttribute(hstdout, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+	std::cout << std::setw(15) << std::right << std::setfill('_') << "|";
+	std::cout << std::setw(48) << std::right << std::setfill('_') << "|" << std::endl;
+
+	if (HP < 50) {
+		if (HP < 30) {
+			std::cout << "|_HealthPoints_" << std::setw(6) << std::right << std::setfill('_') << "|_";
+			std::cout << std::setw(3) << std::left << std::setfill('_') << HP << "|";
+			SetConsoleTextAttribute(hstdout, FOREGROUND_RED | FOREGROUND_INTENSITY);
+			if (HP > 0) {
+				for (int i = 0; i < HP; i = i + 10) {
+					std::cout << InfoBlock;
+				}
+			}
+			else
+				std::cout << "dead";
+			std::cout << std::endl;
+		}
+		else {
+			std::cout << "|_HealthPoints_" << std::setw(6) << std::right << std::setfill('_') << "|_";
+			std::cout << std::setw(3) << std::left << std::setfill('_') << HP << "|";
+			SetConsoleTextAttribute(hstdout, FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY);
+			for (int i = 0; i < HP; i = i + 10) {
+				std::cout << InfoBlock;
+			}
+			std::cout << std::endl;
+		}
+	}
+	else {
+		std::cout << "|_HealthPoints_" << std::setw(6) << std::right << std::setfill('_') << "|_";
+		std::cout << std::setw(3) << std::left << std::setfill('_') << HP << "|";
+		SetConsoleTextAttribute(hstdout, FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+		for (int i = 0; i < HP; i = i + 10) {
+			std::cout << InfoBlock;
+		}
+		std::cout << std::endl;
+	}
+
+
+	SetConsoleTextAttribute(hstdout, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+	std::cout << std::endl;
+
+}
+
+void Defender::replica() {
+	HANDLE hstdout = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+	GetConsoleScreenBufferInfo(hstdout, &csbi);
+
+	SetConsoleTextAttribute(hstdout, FOREGROUND_RED | FOREGROUND_INTENSITY);
+	std::cout << "Defender get P R O T E C T I O N !" << std::endl;
+
+	SetConsoleTextAttribute(hstdout, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+	std::cout << std::endl;
+
+}
+
+void DemonSlayer::initUnit() {
+	Staff* weapon = new Staff;
+	type = "DemonSlayer";
+	HP = 300;
+	DF = 50;
+	level = 0;
+	init_max = 25;
+	battle_stats.resize(3);
+	battle_stats[0] = 1;
+	battle_stats[1] = 1000;
+	battle_stats[2] = 10;
+	spec_ab = { 1,4,5 };
+	gear.push_back(weapon);
+
+}
+
+int DemonSlayer::setInitiative() {
+	std::random_device rd;
+	std::mt19937 mt;
+	std::uniform_int_distribution<int> dist(1, init_max);
+	return dist(mt);
+}
+
+void DemonSlayer::info() {
+	HANDLE hstdout = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+	GetConsoleScreenBufferInfo(hstdout, &csbi);
+	std::cout << "|_";
+	SetConsoleTextAttribute(hstdout, FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY);
+	std::cout << "Demon Slayer";
+	SetConsoleTextAttribute(hstdout, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+	std::cout << std::setw(15) << std::right << std::setfill('_') << "|";
+	std::cout << std::setw(48) << std::right << std::setfill('_') << "|" << std::endl;
+
+	if (HP < 50) {
+		if (HP < 30) {
+			std::cout << "|_HealthPoints_" << std::setw(6) << std::right << std::setfill('_') << "|_";
+			std::cout << std::setw(3) << std::left << std::setfill('_') << HP << "|";
+			SetConsoleTextAttribute(hstdout, FOREGROUND_RED | FOREGROUND_INTENSITY);
+			if (HP > 0) {
+				for (int i = 0; i < HP; i = i + 10) {
+					std::cout << InfoBlock;
+				}
+			}
+			else
+				std::cout << "dead";
+			std::cout << std::endl;
+		}
+		else {
+			std::cout << "|_HealthPoints_" << std::setw(6) << std::right << std::setfill('_') << "|_";
+			std::cout << std::setw(3) << std::left << std::setfill('_') << HP << "|";
+			SetConsoleTextAttribute(hstdout, FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY);
+			for (int i = 0; i < HP; i = i + 10) {
+				std::cout << InfoBlock;
+			}
+			std::cout << std::endl;
+		}
+	}
+	else {
+		std::cout << "|_HealthPoints_" << std::setw(6) << std::right << std::setfill('_') << "|_";
+		std::cout << std::setw(3) << std::left << std::setfill('_') << HP << "|";
+		SetConsoleTextAttribute(hstdout, FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+		for (int i = 0; i < HP; i = i + 10) {
+			std::cout << InfoBlock;
+		}
+		std::cout << std::endl;
+	}
+
+
+	SetConsoleTextAttribute(hstdout, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+	std::cout << std::endl;
+
+}
+
+void DemonSlayer::replica() {
+	HANDLE hstdout = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+	GetConsoleScreenBufferInfo(hstdout, &csbi);
+
+	SetConsoleTextAttribute(hstdout, FOREGROUND_RED | FOREGROUND_INTENSITY);
+	std::cout << "Demon Slayer is possesed by D E M O N S !" << std::endl;
+
+	SetConsoleTextAttribute(hstdout, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+	std::cout << std::endl;
+
+}
 

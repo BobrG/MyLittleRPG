@@ -25,7 +25,7 @@ public:
 	*  units start status.
 	*/
 
-	virtual void InitUnit(); //initialization of unit;
+	virtual void initUnit(); //initialization of unit;
 
 	/* Function info():
 	*  virtual void function, which shows all unit's data
@@ -59,12 +59,16 @@ public:
 	*  adds baff and some special abilities of each hero.
 	*/
 
-	void SetStat(int damage, Buffs& buff_); //updates hero's stats 
+	virtual void setStat(int damage, Buffs& buff_); //updates hero's stats 
 
 	/* Function UnitMenu()
 	*  void function which displays all stats
 	*  of character in "beautifully designed window".
 	*/
+
+	virtual void useSkill();
+
+	void setName();
 
 	void setAutoAttack(bool on);
 
@@ -78,7 +82,7 @@ public:
 
 	std::string getType();
 
-	virtual void UnitMenu();
+	virtual void unitMenu();
 
 	// not finished yet;
 	virtual ~Unit() = default; //destructor, undefined yet;
@@ -109,16 +113,16 @@ protected:
 	std::vector<int> battle_stats;
 	std::vector<Buff*> spec_eff;
 	Weapons gear;
-//	SkArr skill;
 	// Diez simbol is used to represent info. about character's data.
 	char InfoBlock = '#';
 };
 
 class Paladin :public Unit {
 public:
-	void InitUnit();
+	void initUnit();
 	int setInitiative();
-	//Skills* LearnSkill();
+	void setStat(int damage, Buffs& buff_);
+	void useSkill(); 
 	void info();
 	void replica();
 private:
@@ -128,9 +132,10 @@ private:
 
 class Wizard :public Unit {
 public:
-	void InitUnit();
+	void initUnit();
 	int setInitiative();
-	//Skills* LearnSkill();
+	void setStat(int damage, Buffs& buff_);
+	void useSkill(); 
 	void info(); //ctrl+c from previous task;
 	void replica();
 private:
@@ -140,13 +145,50 @@ private:
 
 class Berserk :public Unit {
 public:
-	void InitUnit();
+	void initUnit();
 	int setInitiative();
-	//Skills* LearnSkill();
+	void setStat(int damage, Buffs& buff_);
+	void useSkill(); 
 	void info();
 	void replica();
 private:
 	// levels required for each ability;
+	std::random_device rd;
+	std::mt19937 mt;
+	std::uniform_int_distribution<int> dist;
+	std::uniform_int_distribution<int> dist1;
+	std::vector <int> spec_ab;
+
+};
+
+class DemonSlayer :public Unit {
+public:
+	void initUnit();
+	int setInitiative();
+	void setStat(int damage, Buffs& buff_);
+	void useSkill(); 
+	void info();
+	void replica();
+private:
+	// levels required for each ability;
+	std::vector <int> spec_ab;
+
+};
+
+class Defender :public Unit {
+public:
+	void initUnit();
+	int setInitiative();
+	void setStat(int damage, Buffs& buff_);
+	void useSkill();
+	void info();
+	void replica();
+private:
+	// levels required for each ability;
+	std::random_device rd;
+	std::mt19937 mt;
+	std::uniform_int_distribution<int> dist;
+	std::uniform_int_distribution<int> dist1;
 	std::vector <int> spec_ab;
 
 };
