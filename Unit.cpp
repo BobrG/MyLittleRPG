@@ -15,6 +15,18 @@ int Unit::getHealth() {
 	return HP;
 }
 
+int Unit::getDefence() {
+	return DF;
+}
+
+int Unit::getInspiration() {
+	return battle_stats[2];
+}
+
+void Unit::setInspiration(int eff) {
+	battle_stats[2] -= eff;
+}
+
 bool Unit::is_Dead() {
 	return (HP <= 0);
 }
@@ -78,7 +90,7 @@ std::string Unit::getType() {
 	return type;
 }
 
-int Unit::checkStamina() {
+int Unit::getStamina() {
 	return battle_stats[1];
 }
 
@@ -94,6 +106,7 @@ int Unit::requiredStamina(int i, std::string type) {
 	if (type == "df") {
 		return gear[i]->stamina_required(type);
 	}
+	return 0;
 }
 
 void Unit::unitMenu() {
@@ -192,11 +205,43 @@ void Paladin::initUnit() {
 
 }
 
+void Paladin::setStat(int damage, Buffs& buff_) {
+	std::mt19937 gen(std::random_device().operator()());
+	std::uniform_int_distribution<> dist1(1, 100);
+
+	HP -= damage;
+
+	if (!buff_.empty()) {
+		spec_eff.insert(spec_eff.end(), buff_.begin(), buff_.end());
+	}
+	for (int i = 0; i < spec_eff.size(); ++i) {
+		// applying buffs to unit;
+		if (spec_eff[i]->Is_On()) {
+			if (spec_eff[i]->Return_Type() == "hp") {
+				spec_eff[i]->Apply_Effect(&HP);
+			}
+			if (spec_eff[i]->Return_Type() == "df") {
+				spec_eff[i]->Apply_Effect(&DF);
+			}
+			if (spec_eff[i]->Return_Type() == "st") {
+				spec_eff[i]->Apply_Effect(&battle_stats[1]);
+			}
+
+		}
+		else {
+			// when buff's effects end we delete them from vector of buffs; 
+			spec_eff[i]->~Buff();
+			spec_eff.erase(spec_eff.begin() + i);
+		}
+	}
+
+}
+
 int Paladin::setInitiative() {
-	std::random_device rd;
-	std::mt19937 mt;
-	std::uniform_int_distribution<int> dist(1, init_max);
-	return dist(mt);
+	std::mt19937 gen(std::random_device().operator()());
+	std::uniform_int_distribution<> dist(1, init_max);
+
+	return dist(gen);
 }
 
 void Paladin::info(){
@@ -296,11 +341,48 @@ void Wizard::initUnit() {
 	gear.push_back(weapon);
 }
 
+void Wizard::setStat(int damage, Buffs& buff_) {
+	int hill;
+	std::mt19937 gen(std::random_device().operator()());
+	std::uniform_int_distribution<> dist1(1, 100);
+	
+	HP -= damage;
+	    
+	if ((hill = dist1(gen)) > 30) {
+		HP += hill;
+	}
+
+	if (!buff_.empty()) {
+		spec_eff.insert(spec_eff.end(), buff_.begin(), buff_.end());
+	}
+	for (int i = 0; i < spec_eff.size(); ++i) {
+		// applying buffs to unit;
+		if (spec_eff[i]->Is_On()) {
+			if (spec_eff[i]->Return_Type() == "hp") {
+				spec_eff[i]->Apply_Effect(&HP);
+			}
+			if (spec_eff[i]->Return_Type() == "df") {
+				spec_eff[i]->Apply_Effect(&DF);
+			}
+			if (spec_eff[i]->Return_Type() == "st") {
+				spec_eff[i]->Apply_Effect(&battle_stats[1]);
+			}
+
+		}
+		else {
+			// when buff's effects end we delete them from vector of buffs; 
+			spec_eff[i]->~Buff();
+			spec_eff.erase(spec_eff.begin() + i);
+		}
+	}
+
+}
+
 int Wizard::setInitiative() {
-	std::random_device rd;
-	std::mt19937 mt;
-	std::uniform_int_distribution<int> dist(1, init_max);
-	return dist(mt);
+	std::mt19937 gen(std::random_device().operator()());
+	std::uniform_int_distribution<> dist(1, init_max);
+
+	return dist(gen);
 }
 
 void Wizard::info() {
@@ -391,12 +473,6 @@ void Berserk::initUnit() {
 	DF = 100;
 	level = 0;
 	init_max = 30;
-
-	std::random_device rd;
-	std::mt19937 mt;
-	std::uniform_int_distribution<int> dist(1, init_max);
-	std::uniform_int_distribution<int> dist1(1, 100);
-
 	battle_stats.resize(3);
 	battle_stats[0] = 1;
 	battle_stats[1] = 1000;
@@ -406,8 +482,12 @@ void Berserk::initUnit() {
 }
 
 void Berserk::setStat(int damage, Buffs& buff_) {
-	
-	HP -= damage;
+	std::mt19937 gen(std::random_device().operator()());
+	std::uniform_int_distribution<> dist1(1, 100);
+
+	if (dist1(gen) < 50){
+		HP -= damage;
+	}
 
 	if (!buff_.empty()) {
 		spec_eff.insert(spec_eff.end(), buff_.begin(), buff_.end());
@@ -436,7 +516,9 @@ void Berserk::setStat(int damage, Buffs& buff_) {
 }
 
 int Berserk::setInitiative() {
-	return dist(mt);
+	std::mt19937 gen(std::random_device().operator()());
+	std::uniform_int_distribution<> dist(1, init_max);
+	return dist(gen);
 }
 
 void Berserk::info() {
@@ -533,12 +615,6 @@ void Defender::initUnit() {
 	DF = 300;
 	level = 0;
 	init_max = 30;
-
-	std::random_device rd;
-	std::mt19937 mt;
-	std::uniform_int_distribution<int> dist(1, init_max);
-	std::uniform_int_distribution<int> dist1(1, 100);
-
 	battle_stats.resize(3);
 	battle_stats[0] = 1;
 	battle_stats[1] = 1000;
@@ -549,8 +625,10 @@ void Defender::initUnit() {
 }
 
 void Defender::setStat(int damage, Buffs& buff_) {
-	
-	if (dist1(mt) > 25) {
+	std::mt19937 gen(std::random_device().operator()());
+	std::uniform_int_distribution<> dist1(1, 100);
+
+	if (dist1(gen) > 25) {
 		HP -= (damage * 25) / 100;
 	}
 
@@ -582,10 +660,9 @@ void Defender::setStat(int damage, Buffs& buff_) {
 }
 
 int Defender::setInitiative() {
-	std::random_device rd;
-	std::mt19937 mt;
-	std::uniform_int_distribution<int> dist(1, init_max);
-	return dist(mt);
+	std::mt19937 gen(std::random_device().operator()());
+	std::uniform_int_distribution<> dist(1, init_max);
+	return dist(gen);
 }
 
 void Defender::info() {
@@ -659,6 +736,9 @@ void DemonSlayer::initUnit() {
 	DF = 50;
 	level = 0;
 	init_max = 25;
+
+	//std::uniform_int_distribution<std::mt19937::result_type> dist(1, init_max);
+
 	battle_stats.resize(3);
 	battle_stats[0] = 1;
 	battle_stats[1] = 1000;
@@ -668,11 +748,14 @@ void DemonSlayer::initUnit() {
 
 }
 
+void DemonSlayer::setStat(int damage, Buffs& buff_) {
+
+}
+
 int DemonSlayer::setInitiative() {
-	std::random_device rd;
-	std::mt19937 mt;
-	std::uniform_int_distribution<int> dist(1, init_max);
-	return dist(mt);
+	std::mt19937 gen(std::random_device().operator()());
+	std::uniform_int_distribution<> dist(1, init_max);
+	return dist(gen);
 }
 
 void DemonSlayer::info() {

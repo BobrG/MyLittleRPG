@@ -10,6 +10,8 @@ void list() {
 	std::cout << " 1 - Wizard" << std::endl;
 	std::cout << " 2 - Warrior" << std::endl;
 	std::cout << " 3 - Paladin" << std::endl;
+	std::cout << " 4 - Defender" << std::endl;
+	std::cout << " 5 - Demon Slayer" << std::endl;
 	std::cout << " any other key - /leave" << std::endl;
 }
 
@@ -23,13 +25,18 @@ void create(int key, Unit** u) {
 	else if (key == 3) {
 		*u = new Paladin;
 	}
+	else if (key == 4) {
+		*u = new Defender;
+	}
+	else if (key == 5) {
+		*u = new DemonSlayer;
+	}
 	else {
 		key = 0;
 	}
 }
 
 bool AnyAlive(Unit* a, Unit* b) {
-	int aa, bb;
 	return (a->getHealth() > 0 && b->getHealth() > 0);
 }
 
@@ -55,15 +62,15 @@ void Arena(Unit* Player) {
 	
 }
 
-int AutoAttack(Unit* Player) {
+int AutoAttack(Unit* Player, Unit* Opponent) {
 	int key = 0;
 	if (0/*check inspiration*/) {
 		return 3;
 	}
-	/*if (Player->checkStamina() >= Player->requiredStamina(0, "df")) {
+	if (Player->getStamina() >= Player->requiredStamina(0, "df") && Opponent->getDefence() != 0) {
 		return 2;
-	}*/
-	if (Player->checkStamina() >= Player->requiredStamina(0, "hp")) {
+	}
+	if (Player->getStamina() >= Player->requiredStamina(0, "hp") && Opponent->getHealth() != 0) {
 		return 1;
 	}
 	else
@@ -79,14 +86,14 @@ void Battle(Unit* FirstPl, Unit* SecondPl) {
 	system("CLS");
 
 	if (FirstPl->checkAutoAttack()) {
-		key_1 = AutoAttack(FirstPl);
+		key_1 = AutoAttack(FirstPl,SecondPl);
 	}
 	else {
 		std::cout << "Choose your attack:" << std::endl;
 		std::cout << "|" << std::setw(12) << std::setfill('_') << "1 - Slice";
 		std::cout << std::setw(18) << std::setfill('_') << std::endl;
 		std::cout << "Requires " << FirstPl->requiredStamina(0,"hp") << " stamina" << std::endl;
-		std::cout << "Unit's stamina: " << FirstPl->checkStamina() << std::endl;
+		std::cout << "Unit's stamina: " << FirstPl->getStamina() << std::endl;
 
 		/*std::cout << "|" << std::setw(12) << std::setfill('_') << "2 - Rape";
 		std::cout << std::setw(18) << std::setfill('_') << std::endl;
@@ -96,6 +103,7 @@ void Battle(Unit* FirstPl, Unit* SecondPl) {
 		std::cout << "|" << std::setw(12) << std::setfill('_') << "3 - Use Special Powers";
 		std::cout << std::setw(12) << std::setfill('_') << std::endl;
 		std::cout << "Requires " << " inspiration" << std::endl;
+		std::cout << "Unit's inspiration: " << FirstPl->getInspiration() << std::endl;
 		std::cout << "|" << std::setw(12) << std::setfill('_') << "4 - Skip";
 		std::cout << std::setw(12) << std::setfill('_') << std::endl;
 		std::cin >> key_1;
@@ -103,13 +111,13 @@ void Battle(Unit* FirstPl, Unit* SecondPl) {
 
 
 	if (SecondPl->checkAutoAttack()) {
-		key_2 = AutoAttack(SecondPl);
+		key_2 = AutoAttack(SecondPl, FirstPl);
 	}
 	else {
 		std::cout << "Choose your attack:" << std::endl;
 		std::cout << "|" << "1 - Slice" << std::endl;
 		std::cout << "Requires " << SecondPl->requiredStamina(0, "hp") << " stamina" << std::endl;
-		std::cout << "Unit's stamina: " << SecondPl->checkStamina() << std::endl;
+		std::cout << "Unit's stamina: " << SecondPl->getStamina() << std::endl;
 
 		/*std::cout << "|" << std::setw(12) << std::setfill('_') << "2 - Rape";
 		std::cout << std::setw(18) << std::setfill('_') << std::endl;
@@ -118,6 +126,7 @@ void Battle(Unit* FirstPl, Unit* SecondPl) {
 		*/
 		std::cout << "|" << "3 - Use Special Powers" << std::endl;
 		std::cout << "Requires " << " inspiration" << std::endl;
+		std::cout << "Unit's inspiration: " << SecondPl->getInspiration() << std::endl;
 		std::cout << "|" << "4 - Skip" << std::endl;
 		std::cin >> key_2;
 	}
@@ -127,7 +136,7 @@ void Battle(Unit* FirstPl, Unit* SecondPl) {
 	switch (key_1)
     {
 	case 1: {
-		if (FirstPl->checkStamina() <= FirstPl->requiredStamina(0, "hp")) {
+		if (FirstPl->getStamina() <= FirstPl->requiredStamina(0, "hp")) {
 			std::cout << "Unfortunately you haven't got enough STAMINA to attack." << std::endl;
 			FirstPl->setStamina(100);
 			break;
@@ -154,6 +163,7 @@ void Battle(Unit* FirstPl, Unit* SecondPl) {
 		break;
 	case 3:
 		std::cout << "Player 1 Uses skill" << std::endl;
+		//FirstPl->setInspiration(/**/);
 		FirstPl->setStamina(50);
 		break;
 	case 4:
@@ -168,7 +178,7 @@ void Battle(Unit* FirstPl, Unit* SecondPl) {
 	switch (key_2)
 	{
 	case 1: {
-		if (SecondPl->checkStamina() <= SecondPl->requiredStamina(0, "hp")) {
+		if (SecondPl->getStamina() <= SecondPl->requiredStamina(0, "hp")) {
 			std::cout << "Unfortunately you haven't got enough STAMINA to attack." << std::endl;
 			SecondPl->setStamina(100);
 			break;
@@ -195,6 +205,7 @@ void Battle(Unit* FirstPl, Unit* SecondPl) {
 		break;
 	case 3:
 		std::cout << "Player 2 Uses skill" << std::endl;
+		//SecondPl->setInspiration(/**/);
 		SecondPl->setStamina(50);
 		break;
 	case 4:
@@ -216,13 +227,10 @@ void SingleArena(Unit* Player) {
 	list();
 	std::cin >> key;
 	create(key, &Opponent);
-	//if (!key) { return 0; }
+
 	Opponent->initUnit();
 	Opponent->setAutoAttack(true);
-	//int ind_pl = 0;
-	//int ind_opp = 0;
-	//Attack* pl_hit = Player->Hit(ind_pl);
-	//Attack* opp_hit = Opponent->Hit(ind_opp);
+
 	int init_pl = Player->setInitiative();
 	int init_opp = Opponent->setInitiative();
 
@@ -254,6 +262,7 @@ void SingleArena(Unit* Player) {
 	//	Opponent->SetStat(pl_dmg, opp_hit->GetBaff());
 	//	Player->SetStat(opp_dmg, pl_hit->GetBaff());
 	//}
+
 	system("CLS");
 	std::cout << "THE END OF FIGHT:" << std::endl;
 
@@ -317,7 +326,8 @@ void SingleArena(Unit* Player) {
 void TeamArena(Unit* Player) {
 	std::vector <Unit*> Opponents;
 	std::vector <Unit*> Players;
-	int summ_pl, summ_opp = 0;
+	int summ_pl = 0;
+    int summ_opp = 0;
 	int num_opp, num_pl, num_min, num_max;
 
 
@@ -331,6 +341,7 @@ void TeamArena(Unit* Player) {
 		list();
 		std::cin >> key;
 		create(key, &Players[i]);
+		Players[i]->initUnit();
 		summ_pl += Players[i]->setInitiative();
 	}
 	Players.insert(Players.begin(),Player);
@@ -345,6 +356,7 @@ void TeamArena(Unit* Player) {
 		list();
 		std::cin >> key;
 		create(key, &Opponents[i]);
+		Opponents[i]->initUnit();
 		Opponents[i]->setAutoAttack(true);
 		summ_opp += Opponents[i]->setInitiative();
 	}
@@ -353,7 +365,7 @@ void TeamArena(Unit* Player) {
 	std::cout << "Define the order in which your team will fight." << std::endl;
 	for (int i = 0; i < Players.size(); ++i) {
 		std::cout << "Player #" << i + 1 << std::endl;
-		Players[i]->UnitMenu();
+		Players[i]->unitMenu();
 		std::cout << std::endl;
 	}
 	for (int i = 0; i < Players.size(); ++i) {
@@ -381,22 +393,22 @@ void TeamArena(Unit* Player) {
 	}
 	for (int i = 0; i < num_min; ++i) {
 		std::cout << "Player #" << i + 1 << std::endl;
-		Players[i]->UnitMenu();
+		Players[i]->unitMenu();
 
 		std::cout << "Opponent #" << i + 1 << std::endl;
-		Opponents[i]->UnitMenu();
+		Opponents[i]->unitMenu();
 	}
 	
 	if (Opponents.size() > Players.size()) {
 		for (int i = num_min; i < num_max; ++i) {
 			std::cout << "Opponent #" << i + 1 << std::endl;
-			Opponents[i]->UnitMenu();
+			Opponents[i]->unitMenu();
 		}
 	}
 	else {
 		for (int i = num_min; i < num_max; ++i) {
 			std::cout << "Player #" << i + 1 << std::endl;
-			Players[i]->UnitMenu();
+			Players[i]->unitMenu();
 		}
 	}
 
@@ -440,7 +452,7 @@ void menu(Unit* u) {
 		case 1: // Unit's menu;
 			system("CLS");
 
-			u->UnitMenu();
+			u->unitMenu();
 			std::cout << "Back to main menu: press e n t e r." << std::endl;
 
 			std::getchar();

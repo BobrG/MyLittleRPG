@@ -65,8 +65,13 @@ public:
 	*  void function which displays all stats
 	*  of character in "beautifully designed window".
 	*/
+	int getDefence();
 
-	virtual void useSkill();
+	int getInspiration();
+
+	void setInspiration(int eff);
+
+	//virtual void useSkill();
 
 	void setName();
 
@@ -76,7 +81,7 @@ public:
 
 	int requiredStamina(int i, std::string type);
 
-	int checkStamina();
+	int getStamina();
 
 	void setStamina(int eff);
 
@@ -115,6 +120,7 @@ protected:
 	Weapons gear;
 	// Diez simbol is used to represent info. about character's data.
 	char InfoBlock = '#';
+	
 };
 
 class Paladin :public Unit {
@@ -122,7 +128,7 @@ public:
 	void initUnit();
 	int setInitiative();
 	void setStat(int damage, Buffs& buff_);
-	void useSkill(); 
+	//void useSkill(); 
 	void info();
 	void replica();
 private:
@@ -135,7 +141,7 @@ public:
 	void initUnit();
 	int setInitiative();
 	void setStat(int damage, Buffs& buff_);
-	void useSkill(); 
+	//void useSkill(); 
 	void info(); //ctrl+c from previous task;
 	void replica();
 private:
@@ -148,15 +154,11 @@ public:
 	void initUnit();
 	int setInitiative();
 	void setStat(int damage, Buffs& buff_);
-	void useSkill(); 
+	//void useSkill(); 
 	void info();
 	void replica();
 private:
 	// levels required for each ability;
-	std::random_device rd;
-	std::mt19937 mt;
-	std::uniform_int_distribution<int> dist;
-	std::uniform_int_distribution<int> dist1;
 	std::vector <int> spec_ab;
 
 };
@@ -166,7 +168,7 @@ public:
 	void initUnit();
 	int setInitiative();
 	void setStat(int damage, Buffs& buff_);
-	void useSkill(); 
+	//void useSkill(); 
 	void info();
 	void replica();
 private:
@@ -180,15 +182,11 @@ public:
 	void initUnit();
 	int setInitiative();
 	void setStat(int damage, Buffs& buff_);
-	void useSkill();
+	//void useSkill();
 	void info();
 	void replica();
 private:
 	// levels required for each ability;
-	std::random_device rd;
-	std::mt19937 mt;
-	std::uniform_int_distribution<int> dist;
-	std::uniform_int_distribution<int> dist1;
 	std::vector <int> spec_ab;
 
 };

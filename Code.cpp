@@ -11,7 +11,7 @@ int main() {
 	list();
 	std::cin >> key;
 	create(key, &Player);
-	Player->InitUnit();
+	Player->initUnit();
 
 	menu(Player);
 	
