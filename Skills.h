@@ -1,9 +1,11 @@
 #pragma once
 #include <string>
+#include <vector>
 
 //class of buffs
 class Buff {
 public:
+	Buff();
 
 	void Init_Buff(int eff, int n, std::string type_);
 
@@ -32,3 +34,5 @@ public:
 	bool Is_On();
 
 };
+
+typedef std::vector<Buff*> Buffs;

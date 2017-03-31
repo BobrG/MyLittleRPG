@@ -5,7 +5,6 @@
 #include "Weapons.h"
 
 typedef std::vector<Attack*> Weapons;
-//typedef std::vector <Skills*> SkArr;
 class Skills;
 
 class Unit {
@@ -40,9 +39,10 @@ public:
 	bool is_Dead();// returns true whether unit is dead;
 
 	/* Function LearnSkill():
-	*  
+	*  virtual Skills* LearnSkill() = 0;
 	*/
-	virtual Skills* LearnSkill() = 0;
+
+	//virtual void useSkill();
 
 	virtual int setInitiative() = 0;//sets and returns unit's initiative before each battle;
 
@@ -59,12 +59,20 @@ public:
 	*  adds baff and some special abilities of each hero.
 	*/
 
-	void SetStat(int damage, Buff& buff_); //updates hero's stats 
+	void SetStat(int damage, Buffs& buff_); //updates hero's stats 
 
 	/* Function UnitMenu()
 	*  void function which displays all stats
 	*  of character in "beautifully designed window".
 	*/
+
+	void setAutoAttack(bool on);
+
+	bool checkAutoAttack();
+
+	int requiredStamina(int i, std::string type);
+
+	int checkStamina();
 
 	virtual void UnitMenu();
 
@@ -106,7 +114,7 @@ class Paladin :public Unit {
 public:
 	void InitUnit();
 	int setInitiative();
-	Skills* LearnSkill();
+	//Skills* LearnSkill();
 	void info();
 	void replica();
 private:
@@ -118,7 +126,7 @@ class Wizard :public Unit {
 public:
 	void InitUnit();
 	int setInitiative();
-	Skills* LearnSkill();
+	//Skills* LearnSkill();
 	void info(); //ctrl+c from previous task;
 	void replica();
 private:
@@ -130,7 +138,7 @@ class Berserk :public Unit {
 public:
 	void InitUnit();
 	int setInitiative();
-	Skills* LearnSkill();
+	//Skills* LearnSkill();
 	void info();
 	void replica();
 private:

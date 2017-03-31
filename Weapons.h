@@ -1,6 +1,7 @@
 #pragma once
 #include <random>
 #include <vector>
+#include "Skills.h"
 
 class Attack {
 public:
@@ -20,14 +21,21 @@ public:
 
 	/* Function GetBaff - returnes vector of side effects;*/
 
-	std::vector <int> GetBaff();
+	Buffs GetBaff();
+
+	int stamina_required(std::string type);
 
 	virtual ~Attack() = default; // not defined yet;
 protected:
 	/* Weapons data/status:
 	*  DMG - caused damage.
+	*  stamina_hp - stamina required for attack health.
+	*  staamina_df - stamina required for attack defence.
 	*/
 	int DMG;
+	int stamina_hp;
+	int stamina_df;
+	int insp;
 
 	/* baff is a vector of side effects:
 	*  baff[0] - effects on Stamina (default)
@@ -35,7 +43,7 @@ protected:
 	*  baff[2] - effects on HP (multiplication)
 	*  baff[3] - special effects(poisoning for ex.)
 	*/
-	std::vector<int> baff;
+	Buffs spec_eff;
 };
 
 class Sword : public Attack { //for Orc;

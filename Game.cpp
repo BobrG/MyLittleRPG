@@ -51,32 +51,116 @@ void Arena(Unit* Player) {
 	
 }
 
-
-void Battle(Unit* Player, Unit* Opponent) {
-	int init_pl = Player->setInitiative();
-	int init_opp = Opponent->setInitiative();
-	int ind_pl = 0;
-	int ind_opp = 0;
-	for (int i = 0; AnyAlive(Player, Opponent); ++i) {
-		std::cout << "Step #" << i + 1 << std::endl;
-		if (init_pl >= init_opp) {
-			std::cout << "Choose your attack:" << std::endl;
-			std::cout << "|" << std::setw(12) << std::setfill('_') << "1 - Slice";
-			std::cout << std::setw(18) << std::setfill('_') << std::endl;
-			std::cout << "|" << std::setw(12) << std::setfill('_') << "2 - Rape";
-			std::cout << std::setw(18) << std::setfill('_') << std::endl;
-			std::cout << "Choose your attack:" << std::endl;
-			std::cout << "|" << std::setw(12) << std::setfill('_') << "3 - Use Special Powers";
-			std::cout << std::setw(12) << std::setfill('_') << std::endl;
-			Attack* pl_hit = Player->Hit(ind_pl);
-			
-		}
-		else
-		{
-		}
-
+int AutoAttack(Unit* Player) {
+	int key = 0;
+	if (1/*check inspiration*/) {
+		return 1;
+	}
+	if (Player->checkStamina() >= Player->requiredStamina(0, "df")) {
+		return 2;
+	}
+	if (Player->checkStamina() >= Player->requiredStamina(0, "hp")) {
+		return 3;
 	}
 }
+
+void Battle(Unit* FirstPl, Unit* SecondPl) {
+	int key_1 = 0;
+	int key_2 = 0;
+	std::random_device rd;
+	std::mt19937 mt;
+	std::uniform_int_distribution<int> dist(1, 3);
+
+
+	if (FirstPl->checkAutoAttack()) {
+		key_1 = AutoAttack(FirstPl);
+	}
+	else {
+		std::cout << "Choose your attack:" << std::endl;
+		std::cout << "|" << std::setw(12) << std::setfill('_') << "1 - Slice";
+		std::cout << std::setw(18) << std::setfill('_') << std::endl;
+		std::cout << "Requires " << FirstPl->requiredStamina(0,"hp") << " stamina" << std::endl;
+		std::cout << "Unit's stamina: " << FirstPl->checkStamina();
+		std::cout << "|" << std::setw(12) << std::setfill('_') << "2 - Rape";
+		std::cout << std::setw(18) << std::setfill('_') << std::endl;
+		std::cout << "Requires " << FirstPl->requiredStamina(0, "df") << " stamina" << std::endl;
+		std::cout << "Unit's stamina: " << FirstPl->checkStamina();
+		std::cout << "|" << std::setw(12) << std::setfill('_') << "3 - Use Special Powers";
+		std::cout << std::setw(12) << std::setfill('_') << std::endl;
+		std::cout << "Requires " << " inspiration" << std::endl;
+		std::cin >> key_1;
+	}
+
+	if (SecondPl->checkAutoAttack()) {
+		key_2 = AutoAttack(SecondPl);
+	}
+	else {
+		std::cout << "Choose your attack:" << std::endl;
+		std::cout << "|" << std::setw(12) << std::setfill('_') << "1 - Slice";
+		std::cout << std::setw(18) << std::setfill('_') << std::endl;
+		std::cout << "Requires " << SecondPl->requiredStamina(0, "hp") << " stamina" << std::endl;
+		std::cout << "Unit's stamina: " << SecondPl->checkStamina();
+		std::cout << "|" << std::setw(12) << std::setfill('_') << "2 - Rape";
+		std::cout << std::setw(18) << std::setfill('_') << std::endl;
+		std::cout << "Requires " << SecondPl->requiredStamina(0, "df") << " stamina" << std::endl;
+		std::cout << "Unit's stamina: " << SecondPl->checkStamina();
+		std::cout << "|" << std::setw(12) << std::setfill('_') << "3 - Use Special Powers";
+		std::cout << std::setw(12) << std::setfill('_') << std::endl;
+		std::cout << "Requires " << " inspiration" << std::endl;
+		std::cin >> key_2;
+	}
+
+	switch (key_1)
+    {
+	case 1: {
+		Attack* pl1_hit = FirstPl->Hit(0);
+		Attack* pl2_hit = SecondPl->Hit(0);
+		FirstPl->info();
+		SecondPl->info();
+		int pl_dmg;
+		pl_dmg = pl1_hit->attack();
+		pl2_hit->fendoff(pl_dmg);
+
+		SecondPl->SetStat(pl_dmg, pl2_hit->GetBaff());
+		FirstPl->SetStat(0, pl1_hit->GetBaff());
+		break; 
+	}
+	case 2:
+		std::cout << "Player 1 Uses defence attack" << std::endl;
+		break;
+	case 3:
+		std::cout << "Player 1 Uses skill" << std::endl;
+		break;
+	default:
+		break;
+	}
+
+	switch (key_2)
+	{
+	case 1: {
+		Attack* pl1_hit = SecondPl->Hit(0);
+		Attack* pl2_hit = FirstPl->Hit(0);
+		SecondPl->info();
+		FirstPl->info();
+		int pl_dmg;
+		pl_dmg = pl1_hit->attack();
+		pl2_hit->fendoff(pl_dmg);
+
+		FirstPl->SetStat(pl_dmg, pl2_hit->GetBaff());
+		SecondPl->SetStat(0, pl1_hit->GetBaff());
+		break;
+	}
+	case 2:
+		std::cout << "Player 2 Uses defence attack" << std::endl;
+		break;
+	case 3:
+		std::cout << "Player 2 Uses skill" << std::endl;
+		break;
+	default:
+		break;
+	}
+}
+
 
 
 void SingleArena(Unit* Player) {
@@ -154,6 +238,21 @@ void SingleArena(Unit* Player) {
 
   TODO: Add class system. Expand and improve Skills class;
 
+  RAGE - Warrior skill:
+  Increases STAMINA and all stats;
+
+  POWER OF NATURE - Mage skill:
+  Hills unit and makes damage to opponent;
+
+  DOGS - Defender skill:
+  Casts horde of dogs, who fight with player;
+
+  RESSURECT - Paladin skill:
+  Makes dead unit alive, with minimum HP;
+
+  CURSE - Demon Slayer skill:
+  Curses all opponent's team members;
+
   */
 
 void TeamArena(Unit* Player) {
@@ -187,6 +286,7 @@ void TeamArena(Unit* Player) {
 		list();
 		std::cin >> key;
 		create(key, &Opponents[i]);
+		Opponents[i]->setAutoAttack(true);
 		summ_opp += Opponents[i]->setInitiative();
 	}
 

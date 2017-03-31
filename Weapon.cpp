@@ -7,8 +7,17 @@
 #include <windows.h>
 #include <random>
 
-std::vector <int> Attack::GetBaff() {
-	return baff;
+Buffs Attack::GetBaff() {
+	return spec_eff;
+}
+
+int Attack::stamina_required(std::string type) {
+	if (type == "hp") {
+		return stamina_hp;
+	}
+	if (type == "df") {
+		return stamina_df;
+	}
 }
 
 Shield::Shield() : rd()
@@ -16,19 +25,25 @@ Shield::Shield() : rd()
 , dist(1, max_dmg)
 , dist1(1, 100)
 {
-	baff.resize(4);
+	stamina_hp = 100;
+	stamina_df = 50;
+	insp = 1;
 }
 
 int Shield::attack() {
+	Buff* b;
 	DMG = dist(mt);
 	info();
-	baff[0] = 35;
+	//b->Init_Buff(35,0,"st");
+	//spec_eff.push_back(b);
 	return DMG;
 }
 
 void Shield::fendoff(int damage) {
+	Buff* b = new Buff;
 	if (dist1(mt) > 50) {
-		baff[1] = (damage * 5) / 10;
+		b->Init_Buff((damage * 5) / 10, 0, "hp");
+		spec_eff.push_back(b);
 		std::cout << "P R O T E C T E D" << std::endl;
 	}
 }
@@ -74,18 +89,22 @@ Staff::Staff() : rd()
 , dist(1, max_dmg)
 , dist1(1, 100)
 {
-	baff.resize(4);
+	//baff.resize(4);
+	stamina_df = 30;
+	stamina_hp = 50;
+	insp = 3;
 }
 
 int Staff::attack() {
+	Buff* b = new Buff;
 	DMG = dist(mt);
 	if (dist1(mt) > 40) {
-		baff[1] = (DMG * 6) / 10;
+		b->Init_Buff((DMG * 6) / 10, 0, "hp");
 		std::cout << "H I L L I N G" << std::endl;
 
 	}
 	info();
-	baff[0] = 35;
+	//baff[0] = 35;
 	return DMG;
 }
 
@@ -133,7 +152,10 @@ Sword::Sword() : rd()
 , dist(1, max_dmg)
 , dist1(1, 100)
 {
-	baff.resize(3);
+	//baff.resize(3);
+	stamina_hp = 250;
+	stamina_df = 100;
+	insp = 2;
 }
 
 int Sword::attack() {
@@ -144,7 +166,7 @@ int Sword::attack() {
 	else
 		DMG = dist(mt);
 	info();
-	baff[0] = 35;
+	//baff[0] = 35;
 	return DMG;
 }
 

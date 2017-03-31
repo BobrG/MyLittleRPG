@@ -19,16 +19,44 @@ bool Unit::is_Dead() {
 	return (HP <= 0);
 }
 
-void Unit::SetStat(int damage, Buff& buff_) {
+void Unit::setAutoAttack(bool on) {
+	if (on) {
+		type += " bot";
+	}
+	else {
+		int i = type.find(" ");
+		type.erase(type.begin() + i, type.end());
+	}
+}
+
+bool Unit::checkAutoAttack() {
+	if (type.find(" bot")) {
+		return true;
+	}
+	else
+		return false;
+
+}
+
+void Unit::SetStat(int damage, Buffs& buff_) {
 	HP -= damage;
 	//Buff tmp_buff = buff_;
-	spec_eff.push_back(&buff_);
+	if (!buff_.empty()) {
+		spec_eff.insert(spec_eff.end(), buff_.begin(), buff_.end());
+	}
 	for (int i = 0; i < spec_eff.size(); ++i) {
 		// applying buffs to unit;
 		if (spec_eff[i]->Is_On()) {
 			if (spec_eff[i]->Return_Type() == "hp") {
 				spec_eff[i]->Apply_Effect(HP);
 			}
+			if (spec_eff[i]->Return_Type() == "df") {
+				spec_eff[i]->Apply_Effect(DF);
+			}
+			if (spec_eff[i]->Return_Type() == "st") {
+				spec_eff[i]->Apply_Effect(battle_stats[1]);
+			}
+
 		}
 		else {
 			// when buff's effects end we delete them from vector of buffs; 
@@ -38,6 +66,20 @@ void Unit::SetStat(int damage, Buff& buff_) {
 	}
 
 
+}
+
+int Unit::checkStamina() {
+	return battle_stats[1];
+}
+
+int Unit::requiredStamina(int i, std::string type) {
+	if (type == "hp") {
+		return gear[i]->stamina_required(type);
+	}
+
+	if (type == "df") {
+		return gear[i]->stamina_required(type);
+	}
 }
 
 void Unit::UnitMenu() {
@@ -196,17 +238,17 @@ void Paladin::info(){
 
 // NOT IMPLEMENTED YET!!!
 
-Skills* Paladin::LearnSkill() {
-	if (level == spec_ab[0]) {
-		//return new Blessing;
-	}
-	if (level == spec_ab[1]) {
-
-	}
-	if (level == spec_ab[2]) {
-
-	}
-}
+//Skills* Paladin::LearnSkill() {
+//	if (level == spec_ab[0]) {
+//		//return new Blessing;
+//	}
+//	if (level == spec_ab[1]) {
+//
+//	}
+//	if (level == spec_ab[2]) {
+//
+//	}
+//}
 
 void Paladin::replica() {
 	HANDLE hstdout = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -316,17 +358,17 @@ void Wizard::replica() {
 
 }
 
-Skills* Wizard::LearnSkill() {
-	if (level == spec_ab[0]) {
-	//	return new FireBall;
-	}
-	if (level == spec_ab[1]) {
-
-	}
-	if (level == spec_ab[2]) {
-
-	}
-}
+//Skills* Wizard::LearnSkill() {
+//	if (level == spec_ab[0]) {
+//	//	return new FireBall;
+//	}
+//	if (level == spec_ab[1]) {
+//
+//	}
+//	if (level == spec_ab[2]) {
+//
+//	}
+//}
 
 //Attack* Wizard::Hit(int i) {
 //	replica();
@@ -424,17 +466,17 @@ void Berserk::replica() {
 
 // NOT IMPLEMENTED YET!!!
 
-Skills* Berserk::LearnSkill() {
-	if (level == spec_ab[0]) {
-	//	return new Rage;
-	}
-	if (level == spec_ab[1]) {
-
-	}
-	if (level == spec_ab[2]) {
-
-	}
-}
+//Skills* Berserk::LearnSkill() {
+//	if (level == spec_ab[0]) {
+//	//	return new Rage;
+//	}
+//	if (level == spec_ab[1]) {
+//
+//	}
+//	if (level == spec_ab[2]) {
+//
+//	}
+//}
 
 //Attack* Berserk::Hit(int i) {
 //	replica();
