@@ -42,7 +42,7 @@ int Shield::attack() {
 void Shield::fendoff(int damage) {
 	Buff* b = new Buff;
 	if (dist1(mt) > 50) {
-		b->Init_Buff((damage * 5) / 10, 0, "hp");
+		b->Init_Buff((damage * 5) / 10, 1, "hp");
 		spec_eff.push_back(b);
 		std::cout << "P R O T E C T E D" << std::endl;
 	}
@@ -99,7 +99,7 @@ int Staff::attack() {
 	Buff* b = new Buff;
 	DMG = dist(mt);
 	if (dist1(mt) > 40) {
-		b->Init_Buff((DMG * 6) / 10, 0, "hp");
+		b->Init_Buff((DMG * 6) / 10, 1, "hp");
 		std::cout << "H I L L I N G" << std::endl;
 
 	}

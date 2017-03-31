@@ -74,6 +74,10 @@ public:
 
 	int checkStamina();
 
+	void setStamina(int eff);
+
+	std::string getType();
+
 	virtual void UnitMenu();
 
 	// not finished yet;

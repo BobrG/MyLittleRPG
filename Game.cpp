@@ -37,6 +37,10 @@ void Arena(Unit* Player) {
 	int key = 0;
 	std::cout << "Choose a type of fight:" << std::endl;
 	// Two types: team battle key = 2 && single player key = 1;
+	std::cout << " 1 - Single battle;" << std::endl;
+	std::cout << " 2 - Team battle;" << std::endl;
+	std::cin >> key;
+
 	switch (key)
 	{
 	case 1:
@@ -53,15 +57,17 @@ void Arena(Unit* Player) {
 
 int AutoAttack(Unit* Player) {
 	int key = 0;
-	if (1/*check inspiration*/) {
-		return 1;
-	}
-	if (Player->checkStamina() >= Player->requiredStamina(0, "df")) {
-		return 2;
-	}
-	if (Player->checkStamina() >= Player->requiredStamina(0, "hp")) {
+	if (0/*check inspiration*/) {
 		return 3;
 	}
+	/*if (Player->checkStamina() >= Player->requiredStamina(0, "df")) {
+		return 2;
+	}*/
+	if (Player->checkStamina() >= Player->requiredStamina(0, "hp")) {
+		return 1;
+	}
+	else
+		return 4;
 }
 
 void Battle(Unit* FirstPl, Unit* SecondPl) {
@@ -70,7 +76,7 @@ void Battle(Unit* FirstPl, Unit* SecondPl) {
 	std::random_device rd;
 	std::mt19937 mt;
 	std::uniform_int_distribution<int> dist(1, 3);
-
+	system("CLS");
 
 	if (FirstPl->checkAutoAttack()) {
 		key_1 = AutoAttack(FirstPl);
@@ -80,39 +86,52 @@ void Battle(Unit* FirstPl, Unit* SecondPl) {
 		std::cout << "|" << std::setw(12) << std::setfill('_') << "1 - Slice";
 		std::cout << std::setw(18) << std::setfill('_') << std::endl;
 		std::cout << "Requires " << FirstPl->requiredStamina(0,"hp") << " stamina" << std::endl;
-		std::cout << "Unit's stamina: " << FirstPl->checkStamina();
-		std::cout << "|" << std::setw(12) << std::setfill('_') << "2 - Rape";
+		std::cout << "Unit's stamina: " << FirstPl->checkStamina() << std::endl;
+
+		/*std::cout << "|" << std::setw(12) << std::setfill('_') << "2 - Rape";
 		std::cout << std::setw(18) << std::setfill('_') << std::endl;
 		std::cout << "Requires " << FirstPl->requiredStamina(0, "df") << " stamina" << std::endl;
 		std::cout << "Unit's stamina: " << FirstPl->checkStamina();
+		*/
 		std::cout << "|" << std::setw(12) << std::setfill('_') << "3 - Use Special Powers";
 		std::cout << std::setw(12) << std::setfill('_') << std::endl;
 		std::cout << "Requires " << " inspiration" << std::endl;
+		std::cout << "|" << std::setw(12) << std::setfill('_') << "4 - Skip";
+		std::cout << std::setw(12) << std::setfill('_') << std::endl;
 		std::cin >> key_1;
 	}
+
 
 	if (SecondPl->checkAutoAttack()) {
 		key_2 = AutoAttack(SecondPl);
 	}
 	else {
 		std::cout << "Choose your attack:" << std::endl;
-		std::cout << "|" << std::setw(12) << std::setfill('_') << "1 - Slice";
-		std::cout << std::setw(18) << std::setfill('_') << std::endl;
+		std::cout << "|" << "1 - Slice" << std::endl;
 		std::cout << "Requires " << SecondPl->requiredStamina(0, "hp") << " stamina" << std::endl;
-		std::cout << "Unit's stamina: " << SecondPl->checkStamina();
-		std::cout << "|" << std::setw(12) << std::setfill('_') << "2 - Rape";
+		std::cout << "Unit's stamina: " << SecondPl->checkStamina() << std::endl;
+
+		/*std::cout << "|" << std::setw(12) << std::setfill('_') << "2 - Rape";
 		std::cout << std::setw(18) << std::setfill('_') << std::endl;
 		std::cout << "Requires " << SecondPl->requiredStamina(0, "df") << " stamina" << std::endl;
 		std::cout << "Unit's stamina: " << SecondPl->checkStamina();
-		std::cout << "|" << std::setw(12) << std::setfill('_') << "3 - Use Special Powers";
-		std::cout << std::setw(12) << std::setfill('_') << std::endl;
+		*/
+		std::cout << "|" << "3 - Use Special Powers" << std::endl;
 		std::cout << "Requires " << " inspiration" << std::endl;
+		std::cout << "|" << "4 - Skip" << std::endl;
 		std::cin >> key_2;
 	}
+
+	std::cout << FirstPl->getType() << "'s turn!" << std::endl;
 
 	switch (key_1)
     {
 	case 1: {
+		if (FirstPl->checkStamina() <= FirstPl->requiredStamina(0, "hp")) {
+			std::cout << "Unfortunately you haven't got enough STAMINA to attack." << std::endl;
+			FirstPl->setStamina(100);
+			break;
+		}
 		Attack* pl1_hit = FirstPl->Hit(0);
 		Attack* pl2_hit = SecondPl->Hit(0);
 		FirstPl->info();
@@ -123,6 +142,11 @@ void Battle(Unit* FirstPl, Unit* SecondPl) {
 
 		SecondPl->SetStat(pl_dmg, pl2_hit->GetBaff());
 		FirstPl->SetStat(0, pl1_hit->GetBaff());
+
+		FirstPl->info();
+		SecondPl->info();
+
+		FirstPl->setStamina(-1*pl1_hit->stamina_required("hp"));
 		break; 
 	}
 	case 2:
@@ -130,14 +154,25 @@ void Battle(Unit* FirstPl, Unit* SecondPl) {
 		break;
 	case 3:
 		std::cout << "Player 1 Uses skill" << std::endl;
+		FirstPl->setStamina(50);
+		break;
+	case 4:
+		FirstPl->setStamina(100);
 		break;
 	default:
 		break;
 	}
 
+	std::cout << SecondPl->getType() << "'s turn!" << std::endl;
+
 	switch (key_2)
 	{
 	case 1: {
+		if (SecondPl->checkStamina() <= SecondPl->requiredStamina(0, "hp")) {
+			std::cout << "Unfortunately you haven't got enough STAMINA to attack." << std::endl;
+			SecondPl->setStamina(100);
+			break;
+		}
 		Attack* pl1_hit = SecondPl->Hit(0);
 		Attack* pl2_hit = FirstPl->Hit(0);
 		SecondPl->info();
@@ -148,6 +183,11 @@ void Battle(Unit* FirstPl, Unit* SecondPl) {
 
 		FirstPl->SetStat(pl_dmg, pl2_hit->GetBaff());
 		SecondPl->SetStat(0, pl1_hit->GetBaff());
+
+		SecondPl->info();
+		FirstPl->info();
+
+		SecondPl->setStamina(-1*pl1_hit->stamina_required("hp"));
 		break;
 	}
 	case 2:
@@ -155,10 +195,16 @@ void Battle(Unit* FirstPl, Unit* SecondPl) {
 		break;
 	case 3:
 		std::cout << "Player 2 Uses skill" << std::endl;
+		SecondPl->setStamina(50);
+		break;
+	case 4:
+		SecondPl->setStamina(100);
 		break;
 	default:
 		break;
 	}
+
+
 }
 
 
@@ -172,12 +218,25 @@ void SingleArena(Unit* Player) {
 	create(key, &Opponent);
 	//if (!key) { return 0; }
 	Opponent->InitUnit();
-	int ind_pl = 0;
-	int ind_opp = 0;
-	Attack* pl_hit = Player->Hit(ind_pl);
-	Attack* opp_hit = Opponent->Hit(ind_opp);
+	Opponent->setAutoAttack(true);
+	//int ind_pl = 0;
+	//int ind_opp = 0;
+	//Attack* pl_hit = Player->Hit(ind_pl);
+	//Attack* opp_hit = Opponent->Hit(ind_opp);
+	int init_pl = Player->setInitiative();
+	int init_opp = Opponent->setInitiative();
 
-	Battle(Player, Opponent);
+	for (int i = 0; AnyAlive(Player, Opponent); ++i) {
+		std::cout << "STEP #" << i + 1 << std::endl;
+     	if (init_pl > init_opp)
+			Battle(Player, Opponent);
+		else
+			Battle(Opponent, Player);
+		std::cout << "Press ENTER to CONTINUE" << std::endl;
+		std::getchar();
+		std::getchar();
+
+	}
 
 	//for (int i = 0; AnyAlive(Player, Opponent); ++i) {
 	//	int pl_dmg, opp_dmg;
@@ -195,7 +254,7 @@ void SingleArena(Unit* Player) {
 	//	Opponent->SetStat(pl_dmg, opp_hit->GetBaff());
 	//	Player->SetStat(opp_dmg, pl_hit->GetBaff());
 	//}
-
+	system("CLS");
 	std::cout << "THE END OF FIGHT:" << std::endl;
 
 	Player->info();
@@ -392,6 +451,7 @@ void menu(Unit* u) {
 				MenuOn = 0;
 				break;
 		case 2: // it. 2
+			break;
 		case 3:
 			system("CLS");
 

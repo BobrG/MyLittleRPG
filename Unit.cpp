@@ -30,7 +30,8 @@ void Unit::setAutoAttack(bool on) {
 }
 
 bool Unit::checkAutoAttack() {
-	if (type.find(" bot")) {
+	std::size_t f = type.find(" bot");
+	if (f != std::string::npos) {
 		return true;
 	}
 	else
@@ -48,13 +49,13 @@ void Unit::SetStat(int damage, Buffs& buff_) {
 		// applying buffs to unit;
 		if (spec_eff[i]->Is_On()) {
 			if (spec_eff[i]->Return_Type() == "hp") {
-				spec_eff[i]->Apply_Effect(HP);
+				spec_eff[i]->Apply_Effect(&HP);
 			}
 			if (spec_eff[i]->Return_Type() == "df") {
-				spec_eff[i]->Apply_Effect(DF);
+				spec_eff[i]->Apply_Effect(&DF);
 			}
 			if (spec_eff[i]->Return_Type() == "st") {
-				spec_eff[i]->Apply_Effect(battle_stats[1]);
+				spec_eff[i]->Apply_Effect(&battle_stats[1]);
 			}
 
 		}
@@ -68,8 +69,16 @@ void Unit::SetStat(int damage, Buffs& buff_) {
 
 }
 
+std::string Unit::getType() {
+	return type;
+}
+
 int Unit::checkStamina() {
 	return battle_stats[1];
+}
+
+void Unit::setStamina(int eff) {
+	battle_stats[1] += eff;
 }
 
 int Unit::requiredStamina(int i, std::string type) {
@@ -163,6 +172,7 @@ Attack* Unit::Hit(int i) {
 }
 
 void Paladin::InitUnit() {
+	Shield* weapon = new Shield;
 	type = "Paladin";
 	std::cout << "What is your name adventurer?" << std::endl;
 	std::cin >> name;
@@ -172,10 +182,10 @@ void Paladin::InitUnit() {
 	init_max = 25;
 	battle_stats.resize(3);
 	battle_stats[0] = 1;// start initiation;
-	battle_stats[1] = 100;// start stamina; 
+	battle_stats[1] = 1000;// start stamina; 
 	battle_stats[2] = 100;// start inspiration;
 	spec_ab = { 1,3,7 };
-	gear.resize(1);
+	gear.push_back(weapon);
 
 }
 
@@ -269,6 +279,7 @@ void Paladin::replica() {
 //}
 
 void Wizard::InitUnit() {
+	Staff* weapon = new Staff;
 	type = "Wizard";
 	std::cout << "What is your name adventurer?" << std::endl;
 	std::cin >> name;
@@ -278,13 +289,10 @@ void Wizard::InitUnit() {
 	init_max = 20;
 	battle_stats.resize(3);
 	battle_stats[0] = 1;
-	battle_stats[1] = 100;
+	battle_stats[1] = 1000;
 	battle_stats[2] = 100;
 	spec_ab = { 1,3,6 };
-	gear.resize(1);
-	Staff* obj;
-//	gear[0] = obj;
-
+	gear.push_back(weapon);
 }
 
 int Wizard::setInitiative() {
@@ -376,6 +384,7 @@ void Wizard::replica() {
 //}
 
 void Berserk::InitUnit() {
+	Sword* weapon = new Sword;
 	type = "Berserk";
 	std::cout << "What is your name adventurer?" << std::endl;
 	std::cin >> name;
@@ -385,12 +394,10 @@ void Berserk::InitUnit() {
 	init_max = 30;
 	battle_stats.resize(3);
 	battle_stats[0] = 1;
-	battle_stats[1] = 100;
+	battle_stats[1] = 1000;
 	battle_stats[2] = 100;
 	spec_ab = { 1,4,5 };
-	gear.resize(1);
-	//Sword* obj;
-	//gear[0] = obj;
+	gear.push_back(weapon);
 }
 
 int Berserk::setInitiative() {
