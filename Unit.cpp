@@ -24,7 +24,9 @@ int Unit::getInspiration() {
 }
 
 void Unit::setInspiration(int eff) {
-	battle_stats[2] -= eff;
+	if (battle_stats[2] > 0) {
+		battle_stats[2] -= eff;
+	}
 }
 
 bool Unit::is_Dead() {
@@ -60,26 +62,26 @@ void Unit::setStat(int damage, Buffs& buff_) {
 	HP -= damage;
 
 	if (!buff_.empty()) {
-		spec_eff.insert(spec_eff.end(), buff_.begin(), buff_.end());
+		spec_Eff.insert(spec_Eff.end(), buff_.begin(), buff_.end());
 	}
-	for (int i = 0; i < spec_eff.size(); ++i) {
+	for (int i = 0; i < spec_Eff.size(); ++i) {
 		// applying buffs to unit;
-		if (spec_eff[i]->Is_On()) {
-			if (spec_eff[i]->Return_Type() == "hp") {
-				spec_eff[i]->Apply_Effect(&HP);
+		if (spec_Eff[i]->Is_On()) {
+			if (spec_Eff[i]->Return_Type() == "hp") {
+				spec_Eff[i]->Apply_Effect(&HP);
 			}
-			if (spec_eff[i]->Return_Type() == "df") {
-				spec_eff[i]->Apply_Effect(&DF);
+			if (spec_Eff[i]->Return_Type() == "df") {
+				spec_Eff[i]->Apply_Effect(&DF);
 			}
-			if (spec_eff[i]->Return_Type() == "st") {
-				spec_eff[i]->Apply_Effect(&battle_stats[1]);
+			if (spec_Eff[i]->Return_Type() == "st") {
+				spec_Eff[i]->Apply_Effect(&battle_stats[1]);
 			}
 
 		}
 		else {
 			// when buff's effects end we delete them from vector of buffs; 
-			spec_eff[i]->~Buff();
-			spec_eff.erase(spec_eff.begin() + i);
+			spec_Eff[i]->~Buff();
+			spec_Eff.erase(spec_Eff.begin() + i);
 		}
 	}
 
@@ -212,26 +214,26 @@ void Paladin::setStat(int damage, Buffs& buff_) {
 	HP -= damage;
 
 	if (!buff_.empty()) {
-		spec_eff.insert(spec_eff.end(), buff_.begin(), buff_.end());
+		spec_Eff.insert(spec_Eff.end(), buff_.begin(), buff_.end());
 	}
-	for (int i = 0; i < spec_eff.size(); ++i) {
+	for (int i = 0; i < spec_Eff.size(); ++i) {
 		// applying buffs to unit;
-		if (spec_eff[i]->Is_On()) {
-			if (spec_eff[i]->Return_Type() == "hp") {
-				spec_eff[i]->Apply_Effect(&HP);
+		if (spec_Eff[i]->Is_On()) {
+			if (spec_Eff[i]->Return_Type() == "hp") {
+				spec_Eff[i]->Apply_Effect(&HP);
 			}
-			if (spec_eff[i]->Return_Type() == "df") {
-				spec_eff[i]->Apply_Effect(&DF);
+			if (spec_Eff[i]->Return_Type() == "df") {
+				spec_Eff[i]->Apply_Effect(&DF);
 			}
-			if (spec_eff[i]->Return_Type() == "st") {
-				spec_eff[i]->Apply_Effect(&battle_stats[1]);
+			if (spec_Eff[i]->Return_Type() == "st") {
+				spec_Eff[i]->Apply_Effect(&battle_stats[1]);
 			}
 
 		}
 		else {
 			// when buff's effects end we delete them from vector of buffs; 
-			spec_eff[i]->~Buff();
-			spec_eff.erase(spec_eff.begin() + i);
+			spec_Eff[i]->~Buff();
+			spec_Eff.erase(spec_Eff.begin() + i);
 		}
 	}
 
@@ -353,26 +355,26 @@ void Wizard::setStat(int damage, Buffs& buff_) {
 	}
 
 	if (!buff_.empty()) {
-		spec_eff.insert(spec_eff.end(), buff_.begin(), buff_.end());
+		spec_Eff.insert(spec_Eff.end(), buff_.begin(), buff_.end());
 	}
-	for (int i = 0; i < spec_eff.size(); ++i) {
+	for (int i = 0; i < spec_Eff.size(); ++i) {
 		// applying buffs to unit;
-		if (spec_eff[i]->Is_On()) {
-			if (spec_eff[i]->Return_Type() == "hp") {
-				spec_eff[i]->Apply_Effect(&HP);
+		if (spec_Eff[i]->Is_On()) {
+			if (spec_Eff[i]->Return_Type() == "hp") {
+				spec_Eff[i]->Apply_Effect(&HP);
 			}
-			if (spec_eff[i]->Return_Type() == "df") {
-				spec_eff[i]->Apply_Effect(&DF);
+			if (spec_Eff[i]->Return_Type() == "df") {
+				spec_Eff[i]->Apply_Effect(&DF);
 			}
-			if (spec_eff[i]->Return_Type() == "st") {
-				spec_eff[i]->Apply_Effect(&battle_stats[1]);
+			if (spec_Eff[i]->Return_Type() == "st") {
+				spec_Eff[i]->Apply_Effect(&battle_stats[1]);
 			}
 
 		}
 		else {
 			// when buff's effects end we delete them from vector of buffs; 
-			spec_eff[i]->~Buff();
-			spec_eff.erase(spec_eff.begin() + i);
+			spec_Eff[i]->~Buff();
+			spec_Eff.erase(spec_Eff.begin() + i);
 		}
 	}
 
@@ -490,26 +492,26 @@ void Berserk::setStat(int damage, Buffs& buff_) {
 	}
 
 	if (!buff_.empty()) {
-		spec_eff.insert(spec_eff.end(), buff_.begin(), buff_.end());
+		spec_Eff.insert(spec_Eff.end(), buff_.begin(), buff_.end());
 	}
-	for (int i = 0; i < spec_eff.size(); ++i) {
+	for (int i = 0; i < spec_Eff.size(); ++i) {
 		// applying buffs to unit;
-		if (spec_eff[i]->Is_On()) {
-			if (spec_eff[i]->Return_Type() == "hp") {
-				spec_eff[i]->Apply_Effect(&HP);
+		if (spec_Eff[i]->Is_On()) {
+			if (spec_Eff[i]->Return_Type() == "hp") {
+				spec_Eff[i]->Apply_Effect(&HP);
 			}
-			if (spec_eff[i]->Return_Type() == "df") {
-				spec_eff[i]->Apply_Effect(&DF);
+			if (spec_Eff[i]->Return_Type() == "df") {
+				spec_Eff[i]->Apply_Effect(&DF);
 			}
-			if (spec_eff[i]->Return_Type() == "st") {
-				spec_eff[i]->Apply_Effect(&battle_stats[1]);
+			if (spec_Eff[i]->Return_Type() == "st") {
+				spec_Eff[i]->Apply_Effect(&battle_stats[1]);
 			}
 
 		}
 		else {
 			// when buff's effects end we delete them from vector of buffs; 
-			spec_eff[i]->~Buff();
-			spec_eff.erase(spec_eff.begin() + i);
+			spec_Eff[i]->~Buff();
+			spec_Eff.erase(spec_Eff.begin() + i);
 		}
 	}
 
@@ -633,26 +635,26 @@ void Defender::setStat(int damage, Buffs& buff_) {
 	}
 
 	if (!buff_.empty()) {
-		spec_eff.insert(spec_eff.end(), buff_.begin(), buff_.end());
+		spec_Eff.insert(spec_Eff.end(), buff_.begin(), buff_.end());
 	}
-	for (int i = 0; i < spec_eff.size(); ++i) {
+	for (int i = 0; i < spec_Eff.size(); ++i) {
 		// applying buffs to unit;
-		if (spec_eff[i]->Is_On()) {
-			if (spec_eff[i]->Return_Type() == "hp") {
-				spec_eff[i]->Apply_Effect(&HP);
+		if (spec_Eff[i]->Is_On()) {
+			if (spec_Eff[i]->Return_Type() == "hp") {
+				spec_Eff[i]->Apply_Effect(&HP);
 			}
-			if (spec_eff[i]->Return_Type() == "df") {
-				spec_eff[i]->Apply_Effect(&DF);
+			if (spec_Eff[i]->Return_Type() == "df") {
+				spec_Eff[i]->Apply_Effect(&DF);
 			}
-			if (spec_eff[i]->Return_Type() == "st") {
-				spec_eff[i]->Apply_Effect(&battle_stats[1]);
+			if (spec_Eff[i]->Return_Type() == "st") {
+				spec_Eff[i]->Apply_Effect(&battle_stats[1]);
 			}
 
 		}
 		else {
 			// when buff's effects end we delete them from vector of buffs; 
-			spec_eff[i]->~Buff();
-			spec_eff.erase(spec_eff.begin() + i);
+			spec_Eff[i]->~Buff();
+			spec_Eff.erase(spec_Eff.begin() + i);
 		}
 	}
 
@@ -749,7 +751,31 @@ void DemonSlayer::initUnit() {
 }
 
 void DemonSlayer::setStat(int damage, Buffs& buff_) {
+	HP -= damage;
 
+	if (!buff_.empty()) {
+		spec_Eff.insert(spec_Eff.end(), buff_.begin(), buff_.end());
+	}
+	for (int i = 0; i < spec_Eff.size(); ++i) {
+		// applying buffs to unit;
+		if (spec_Eff[i]->Is_On()) {
+			if (spec_Eff[i]->Return_Type() == "hp") {
+				spec_Eff[i]->Apply_Effect(&HP);
+			}
+			if (spec_Eff[i]->Return_Type() == "df") {
+				spec_Eff[i]->Apply_Effect(&DF);
+			}
+			if (spec_Eff[i]->Return_Type() == "st") {
+				spec_Eff[i]->Apply_Effect(&battle_stats[1]);
+			}
+
+		}
+		else {
+			// when buff's effects end we delete them from vector of buffs; 
+			spec_Eff[i]->~Buff();
+			spec_Eff.erase(spec_Eff.begin() + i);
+		}
+	}
 }
 
 int DemonSlayer::setInitiative() {

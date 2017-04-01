@@ -116,7 +116,8 @@ protected:
 	int min_insp;
 	int level;
 	std::vector<int> battle_stats;
-	std::vector<Buff*> spec_eff;
+	Buffs spec_Eff; // effects caused by opponents;
+	Buffs spec_Aff; // affection caused by unit on opponents;
 	Weapons gear;
 	// Diez simbol is used to represent info. about character's data.
 	char InfoBlock = '#';
@@ -134,6 +135,7 @@ public:
 private:
 	// levels required for each ability;
 	std::vector <int> spec_ab;
+	int max_hp;
 };
 
 class Wizard :public Unit {
@@ -147,6 +149,7 @@ public:
 private:
 	// levels required for each ability;
 	std::vector <int> spec_ab;
+	int max_hp;
 };
 
 class Berserk :public Unit {
@@ -160,7 +163,7 @@ public:
 private:
 	// levels required for each ability;
 	std::vector <int> spec_ab;
-
+	int max_hp;
 };
 
 class DemonSlayer :public Unit {
@@ -174,7 +177,7 @@ public:
 private:
 	// levels required for each ability;
 	std::vector <int> spec_ab;
-
+	int max_hp;
 };
 
 class Defender :public Unit {
@@ -188,6 +191,6 @@ public:
 private:
 	// levels required for each ability;
 	std::vector <int> spec_ab;
-
+	int max_hp;
 };
 

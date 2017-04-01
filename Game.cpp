@@ -69,7 +69,7 @@ int AutoAttack(UnArr& Oppenents) {
 	int key = 0;
 	Unit* tmp = Oppenents[0];
 	for (int i = 1; i < Oppenents.size(); ++i) {
-		if (tmp->getHealth() > Oppenents[i]->getHealth) {
+		if (tmp->getHealth() > Oppenents[i]->getHealth()) {
 			tmp = Oppenents[i];
 			key = i;
 		}
@@ -144,14 +144,15 @@ void Battle(Unit* FirstPl, Unit* SecondPl) {
 		break; 
 	}
 	case 2:
-		std::cout << "Player 1 Uses defence attack" << std::endl;
+		std::cout << FirstPl->getType() << " Uses defence attack" << std::endl;
 		break;
 	case 3:
-		std::cout << "Player 1 Uses skill" << std::endl;
+		std::cout << FirstPl->getType() << " Uses skill" << std::endl;
 		//FirstPl->setInspiration(/**/);
 		FirstPl->setStamina(50);
 		break;
 	case 4:
+		std::cout << FirstPl->getType() << " Skips step!" << std::endl;
 		FirstPl->setStamina(100);
 		break;
 	default:
@@ -272,6 +273,7 @@ void SingleArena(Unit* Player) {
 
 void Team_List(UnArr& Players) {
 	for (int i = 0; i < Players.size(); ++i) {
+		std::cout << "Player #" << i + 1 << std::endl;
 		Players[i]->unitMenu();
 	}
 }
@@ -279,6 +281,7 @@ void Team_List(UnArr& Players) {
 void Exclude_Dead(UnArr& Players) {
 	for (int i = 0; i < Players.size(); ++i) {
 		if (Players[i]->is_Dead()) {
+			std::cout << "Teammate #" << i + 1 << " - " << Players[i]->getType() << " died! Be carefull next time!" << std::endl;
 			Players.erase(Players.begin() + i);
 		}
 	}
@@ -296,7 +299,7 @@ void Team_Battle(UnArr& FirstPl, UnArr& SecondPl) {
 				int j;
 				std::cout << "Choose opponent to attack" << std::endl;
 				std::cin >> j;
-				Battle(FirstPl[i], SecondPl[j]); // First attacks, Second defence;
+				Battle(FirstPl[i], SecondPl[j - 1]); // First attacks, Second defence;
 			}
 			else 
 				std::cout << "Unit is dead." << std::endl;
@@ -353,8 +356,8 @@ void TeamArena(Unit* Player) {
 		int k;
 		std::cout << "Who goes #" << i+1  << "?" << std::endl;
 		std::cin >> k;
-		if (k < Players.size()) {
-			std::swap(Players[i], Players[k]);
+		if (k-1 < Players.size()) {
+			std::swap(Players[i], Players[k-1]);
 		}
 		else
 		{
@@ -395,8 +398,12 @@ void TeamArena(Unit* Player) {
 */
 
 	for (int i = 0; ; ++i) {
-		Exclude_Dead(Players);
-		Exclude_Dead(Opponents);
+		system("CLS");
+		std::cout << "STEP #" << i + 1 << std::endl;
+		std::cout << "PLAYER'S TEAM:" << std::endl;
+		Team_List(Players);
+		std::cout << "OPPONENT'S TEAM:" << std::endl;
+		Team_List(Opponents);
 
 		if (summ_pl > summ_opp) {
 			Team_Battle(Players, Opponents);
@@ -406,6 +413,13 @@ void TeamArena(Unit* Player) {
 			Team_Battle(Opponents, Players);
 			Team_Battle(Players, Opponents);
 		}
+		
+		Exclude_Dead(Players);
+		Exclude_Dead(Opponents);
+
+		std::cout << "Press ENTER to CONTINUE" << std::endl;
+		std::getchar();
+		std::getchar();
 	}
 
 
