@@ -5,7 +5,6 @@
 #include "Weapons.h"
 
 typedef std::vector<Attack*> Weapons;
-class Skills;
 
 class Unit {
 public:
@@ -67,11 +66,21 @@ public:
 	*/
 	int getDefence();
 
+	void addAffection(Buffs& buff_);
+
+	void addEffect(Buffs& buff_);
+
+	Buffs getAffects();
+
+	Buffs getEffects();
+
 	int getInspiration();
 
 	void setInspiration(int eff);
 
-	//virtual void useSkill();
+	int requiredInspiration();
+
+	virtual void useSkill();
 
 	void setName();
 
@@ -112,6 +121,7 @@ protected:
 	std::string name;
 	int HP;
 	int DF;
+	int required_insp;
 	int init_max;
 	int min_insp;
 	int level;
@@ -129,7 +139,7 @@ public:
 	void initUnit();
 	int setInitiative();
 	void setStat(int damage, Buffs& buff_);
-	//void useSkill(); 
+	void useSkill(); 
 	void info();
 	void replica();
 private:
@@ -171,7 +181,7 @@ public:
 	void initUnit();
 	int setInitiative();
 	void setStat(int damage, Buffs& buff_);
-	//void useSkill(); 
+	void useSkill(); 
 	void info();
 	void replica();
 private:

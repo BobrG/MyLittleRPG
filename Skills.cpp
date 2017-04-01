@@ -10,8 +10,8 @@ void Buff::Apply_Effect(int* stat) {
 	num_steps--;
 }
 
-void Debuff::Apply_Effect(int stat) {
-	stat -= effect;
+void Debuff::Apply_Effect(int* stat) {
+	*stat -= effect;
 	num_steps--;
 }
 

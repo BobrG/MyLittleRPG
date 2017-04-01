@@ -27,11 +27,7 @@ public:
 
 	void Init_Buff(int dmg, int n, std::string type_);
 
-	void Apply_Effect(int stat);
-
-	std::string Return_Type();
-
-	bool Is_On();
+	void Apply_Effect(int* stat);
 
 };
 

@@ -4,8 +4,6 @@
 #include "Game.h"
 #include "Unit.h"
 
-typedef std::vector<Unit*> UnArr;
-
 void list() {
 	std::cout << " 1 - Wizard" << std::endl;
 	std::cout << " 2 - Warrior" << std::endl;
@@ -62,8 +60,6 @@ void Arena(Unit* Player) {
 	}
 	
 }
-
-bool max_el(Unit* a, Unit* b) { return (a->getHealth() < b->getHealth()); }
 
 int AutoAttack(UnArr& Oppenents) {
 	int key = 0;
@@ -133,14 +129,18 @@ void Battle(Unit* FirstPl, Unit* SecondPl) {
 		int pl_dmg;
 		pl_dmg = pl1_hit->attack();
 		pl2_hit->fendoff(pl_dmg);
+		FirstPl->addEffect(pl1_hit->GetBaff());
 
 		SecondPl->setStat(pl_dmg, pl2_hit->GetBaff());
+		FirstPl->addEffect(SecondPl->getAffects());
+
 		FirstPl->setStat(0, pl1_hit->GetBaff());
 
 		FirstPl->info();
 		SecondPl->info();
 
 		FirstPl->setStamina(-1*pl1_hit->stamina_required("hp"));
+		FirstPl->setInspiration(-1);
 		break; 
 	}
 	case 2:
@@ -148,7 +148,9 @@ void Battle(Unit* FirstPl, Unit* SecondPl) {
 		break;
 	case 3:
 		std::cout << FirstPl->getType() << " Uses skill" << std::endl;
-		//FirstPl->setInspiration(/**/);
+		FirstPl->useSkill();
+		SecondPl->setStat(0, FirstPl->getBuffs());
+		FirstPl->setInspiration(FirstPl->requiredInspiration());
 		FirstPl->setStamina(50);
 		break;
 	case 4:
@@ -160,8 +162,6 @@ void Battle(Unit* FirstPl, Unit* SecondPl) {
 	}
 
 }
-
-
 
 void SingleArena(Unit* Player) {
 	Unit* Opponent = NULL;

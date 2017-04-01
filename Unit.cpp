@@ -23,6 +23,10 @@ int Unit::getInspiration() {
 	return battle_stats[2];
 }
 
+int Unit::requiredInspiration() {
+	return required_insp;
+}
+
 void Unit::setInspiration(int eff) {
 	if (battle_stats[2] > 0) {
 		battle_stats[2] -= eff;
@@ -31,6 +35,22 @@ void Unit::setInspiration(int eff) {
 
 bool Unit::is_Dead() {
 	return (HP <= 0);
+}
+
+void Unit::addAffection(Buffs& buff_) {
+	spec_Aff.insert(spec_Aff.end(), buff_.begin(), buff_.end());
+}
+
+void Unit::addEffect(Buffs& buff_) {
+	spec_Eff.insert(spec_Eff.end(), buff_.begin(), buff_.end());
+}
+
+Buffs Unit::getAffects() {
+	return spec_Aff;
+}
+
+Buffs Unit::getEffects() {
+	return spec_Eff;
 }
 
 void Unit::setName() {
@@ -751,7 +771,15 @@ void DemonSlayer::initUnit() {
 }
 
 void DemonSlayer::setStat(int damage, Buffs& buff_) {
-	HP -= damage;
+	std::mt19937 gen(std::random_device().operator()());
+	std::uniform_int_distribution<> dist1(1, 100);
+
+	if (dist1(gen) > 50) {
+		Debuff* b;
+		HP -= damage;
+		b->Init_Buff(damage, 1, "hp");
+		spec_Aff.push_back(b);
+	}
 
 	if (!buff_.empty()) {
 		spec_Eff.insert(spec_Eff.end(), buff_.begin(), buff_.end());
@@ -848,3 +876,6 @@ void DemonSlayer::replica() {
 
 }
 
+void DemonSlayer::useSkill() {
+
+}
