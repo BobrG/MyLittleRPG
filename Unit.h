@@ -58,7 +58,7 @@ public:
 	*  adds baff and some special abilities of each hero.
 	*/
 
-	virtual void setStat(int damage, Buffs& buff_); //updates hero's stats 
+	virtual void setStat(int damage, Buffs& buff_, int mode); //updates hero's stats 
 
 	/* Function UnitMenu()
 	*  void function which displays all stats
@@ -80,7 +80,7 @@ public:
 
 	int requiredInspiration();
 
-	virtual void useSkill();
+	//virtual void useSkill();
 
 	void setName();
 
@@ -138,7 +138,7 @@ class Paladin :public Unit {
 public:
 	void initUnit();
 	int setInitiative();
-	void setStat(int damage, Buffs& buff_);
+	void setStat(int damage, Buffs& buff_, int mode);
 	void useSkill(); 
 	void info();
 	void replica();
@@ -152,7 +152,7 @@ class Wizard :public Unit {
 public:
 	void initUnit();
 	int setInitiative();
-	void setStat(int damage, Buffs& buff_);
+	void setStat(int damage, Buffs& buff_, int mode);
 	//void useSkill(); 
 	void info(); //ctrl+c from previous task;
 	void replica();
@@ -166,7 +166,7 @@ class Berserk :public Unit {
 public:
 	void initUnit();
 	int setInitiative();
-	void setStat(int damage, Buffs& buff_);
+	void setStat(int damage, Buffs& buff_, int mode);
 	//void useSkill(); 
 	void info();
 	void replica();
@@ -180,7 +180,7 @@ class DemonSlayer :public Unit {
 public:
 	void initUnit();
 	int setInitiative();
-	void setStat(int damage, Buffs& buff_);
+	void setStat(int damage, Buffs& buff_, int mode);
 	void useSkill(); 
 	void info();
 	void replica();
@@ -194,7 +194,7 @@ class Defender :public Unit {
 public:
 	void initUnit();
 	int setInitiative();
-	void setStat(int damage, Buffs& buff_);
+	void setStat(int damage, Buffs& buff_, int mode);
 	//void useSkill();
 	void info();
 	void replica();

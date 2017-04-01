@@ -100,11 +100,10 @@ void Battle(Unit* FirstPl, Unit* SecondPl) {
 		std::cout << "Requires " << FirstPl->requiredStamina(0,"hp") << " stamina" << std::endl;
 		std::cout << "Unit's stamina: " << FirstPl->getStamina() << std::endl;
 
-		/*std::cout << "|" << std::setw(12) << std::setfill('_') << "2 - Rape";
-		std::cout << std::setw(18) << std::setfill('_') << std::endl;
+		std::cout << "|"  << "2 - Rape";
 		std::cout << "Requires " << FirstPl->requiredStamina(0, "df") << " stamina" << std::endl;
-		std::cout << "Unit's stamina: " << FirstPl->checkStamina();
-		*/
+		std::cout << "Unit's stamina: " << FirstPl->getStamina();
+		
 		std::cout << "|" << "3 - Use Special Powers" << std::endl;
 		std::cout << "Requires " << " inspiration" << std::endl;
 		std::cout << "Unit's inspiration: " << FirstPl->getInspiration() << std::endl;
@@ -147,11 +146,12 @@ void Battle(Unit* FirstPl, Unit* SecondPl) {
 		std::cout << FirstPl->getType() << " Uses defence attack" << std::endl;
 		break;
 	case 3:
-		std::cout << FirstPl->getType() << " Uses skill" << std::endl;
+		/*std::cout << FirstPl->getType() << " Uses skill" << std::endl;
 		FirstPl->useSkill();
-		SecondPl->setStat(0, FirstPl->getBuffs());
+		SecondPl->setStat(0, FirstPl->getEffects());
 		FirstPl->setInspiration(FirstPl->requiredInspiration());
-		FirstPl->setStamina(50);
+		FirstPl->setStamina(50);*/
+		std::cout << "Not added yet. However, we hope to implement this category soon" << std::endl;
 		break;
 	case 4:
 		std::cout << FirstPl->getType() << " Skips step!" << std::endl;

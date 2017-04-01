@@ -78,7 +78,7 @@ bool Unit::checkAutoAttack() {
 
 }
 
-void Unit::setStat(int damage, Buffs& buff_) {
+void Unit::setStat(int damage, Buffs& buff_, int mode) {
 	HP -= damage;
 
 	if (!buff_.empty()) {
@@ -227,11 +227,22 @@ void Paladin::initUnit() {
 
 }
 
-void Paladin::setStat(int damage, Buffs& buff_) {
+void Paladin::setStat(int damage, Buffs& buff_, int mode) {
 	std::mt19937 gen(std::random_device().operator()());
 	std::uniform_int_distribution<> dist1(1, 100);
 
-	HP -= damage;
+	if (DF == 0 || mode == 1) {
+		HP -= damage;
+	}
+	else
+		DF -= damage;
+
+	if (dist1(gen) > 30) {
+		Buff* b;
+		b->Init_Buff(damage / 2, 1, "hp");
+		spec_Aff.push_back(b);
+	}
+
 
 	if (!buff_.empty()) {
 		spec_Eff.insert(spec_Eff.end(), buff_.begin(), buff_.end());
@@ -363,12 +374,16 @@ void Wizard::initUnit() {
 	gear.push_back(weapon);
 }
 
-void Wizard::setStat(int damage, Buffs& buff_) {
+void Wizard::setStat(int damage, Buffs& buff_, int mode) {
 	int hill;
 	std::mt19937 gen(std::random_device().operator()());
 	std::uniform_int_distribution<> dist1(1, 100);
 	
-	HP -= damage;
+	if (DF == 0 || mode == 1) {
+		HP -= damage;
+	}
+	else
+		DF -= damage;
 	    
 	if ((hill = dist1(gen)) > 30) {
 		HP += hill;
@@ -503,12 +518,16 @@ void Berserk::initUnit() {
 	gear.push_back(weapon);
 }
 
-void Berserk::setStat(int damage, Buffs& buff_) {
+void Berserk::setStat(int damage, Buffs& buff_, int mode) {
 	std::mt19937 gen(std::random_device().operator()());
 	std::uniform_int_distribution<> dist1(1, 100);
 
 	if (dist1(gen) < 50){
-		HP -= damage;
+		if (DF == 0 || mode == 1) {
+			HP -= damage;
+		}
+		else
+			DF -= damage;
 	}
 
 	if (!buff_.empty()) {
@@ -646,12 +665,16 @@ void Defender::initUnit() {
 
 }
 
-void Defender::setStat(int damage, Buffs& buff_) {
+void Defender::setStat(int damage, Buffs& buff_, int mode) {
 	std::mt19937 gen(std::random_device().operator()());
 	std::uniform_int_distribution<> dist1(1, 100);
 
 	if (dist1(gen) > 25) {
-		HP -= (damage * 25) / 100;
+		if (DF == 0 || mode == 1) {
+			HP -= (damage * 25) / 100;
+		}
+		else
+			DF -= (damage * 25) / 100;
 	}
 
 	if (!buff_.empty()) {
@@ -770,13 +793,17 @@ void DemonSlayer::initUnit() {
 
 }
 
-void DemonSlayer::setStat(int damage, Buffs& buff_) {
+void DemonSlayer::setStat(int damage, Buffs& buff_, int mode) {
 	std::mt19937 gen(std::random_device().operator()());
 	std::uniform_int_distribution<> dist1(1, 100);
 
 	if (dist1(gen) > 50) {
 		Debuff* b;
-		HP -= damage;
+		if (DF == 0 || mode == 1) {
+			HP -= damage;
+		}
+		else
+			DF -= damage;
 		b->Init_Buff(damage, 1, "hp");
 		spec_Aff.push_back(b);
 	}
