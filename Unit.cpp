@@ -199,7 +199,7 @@ void Paladin::initUnit() {
 	battle_stats.resize(3);
 	battle_stats[0] = 1;// start initiation;
 	battle_stats[1] = 1000;// start stamina; 
-	battle_stats[2] = 10;// start inspiration;
+	battle_stats[2] = 0;// start inspiration, max = 10;
 	spec_ab = { 1,3,7 };
 	gear.push_back(weapon);
 
@@ -336,7 +336,7 @@ void Wizard::initUnit() {
 	battle_stats.resize(3);
 	battle_stats[0] = 1;
 	battle_stats[1] = 1000;
-	battle_stats[2] = 10;
+	battle_stats[2] = 3; //start inspiration, max = 10;
 	spec_ab = { 1,3,6 };
 	gear.push_back(weapon);
 }
@@ -476,7 +476,7 @@ void Berserk::initUnit() {
 	battle_stats.resize(3);
 	battle_stats[0] = 1;
 	battle_stats[1] = 1000;
-	battle_stats[2] = 10;
+	battle_stats[2] = 0; // start inspiration, max = 10;
 	spec_ab = { 1,4,5 };
 	gear.push_back(weapon);
 }
@@ -618,7 +618,7 @@ void Defender::initUnit() {
 	battle_stats.resize(3);
 	battle_stats[0] = 1;
 	battle_stats[1] = 1000;
-	battle_stats[2] = 10;
+	battle_stats[2] = 0; // start inspiration, max = 10;
 	spec_ab = { 1,4,5 };
 	gear.push_back(weapon);
 
@@ -742,7 +742,7 @@ void DemonSlayer::initUnit() {
 	battle_stats.resize(3);
 	battle_stats[0] = 1;
 	battle_stats[1] = 1000;
-	battle_stats[2] = 10;
+	battle_stats[2] = 3; // start inspiration, max = 10;
 	spec_ab = { 1,4,5 };
 	gear.push_back(weapon);
 

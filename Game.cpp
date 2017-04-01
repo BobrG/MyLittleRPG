@@ -15,6 +15,7 @@ void list() {
 	std::cout << " any other key - /leave" << std::endl;
 }
 
+
 void create(int key, Unit** u) {
 	if (key == 1) {
 		*u = new Wizard;
@@ -62,6 +63,20 @@ void Arena(Unit* Player) {
 	
 }
 
+bool max_el(Unit* a, Unit* b) { return (a->getHealth() < b->getHealth()); }
+
+int AutoAttack(UnArr& Oppenents) {
+	int key = 0;
+	Unit* tmp = Oppenents[0];
+	for (int i = 1; i < Oppenents.size(); ++i) {
+		if (tmp->getHealth() > Oppenents[i]->getHealth) {
+			tmp = Oppenents[i];
+			key = i;
+		}
+	}
+	return key;
+}
+
 int AutoAttack(Unit* Player, Unit* Opponent) {
 	int key = 0;
 	if (0/*check inspiration*/) {
@@ -79,19 +94,13 @@ int AutoAttack(Unit* Player, Unit* Opponent) {
 
 void Battle(Unit* FirstPl, Unit* SecondPl) {
 	int key_1 = 0;
-	int key_2 = 0;
-	std::random_device rd;
-	std::mt19937 mt;
-	std::uniform_int_distribution<int> dist(1, 3);
-	system("CLS");
-
+	
 	if (FirstPl->checkAutoAttack()) {
 		key_1 = AutoAttack(FirstPl,SecondPl);
 	}
 	else {
 		std::cout << "Choose your attack:" << std::endl;
-		std::cout << "|" << std::setw(12) << std::setfill('_') << "1 - Slice";
-		std::cout << std::setw(18) << std::setfill('_') << std::endl;
+		std::cout << "|" << "1 - Slice" << std::endl;
 		std::cout << "Requires " << FirstPl->requiredStamina(0,"hp") << " stamina" << std::endl;
 		std::cout << "Unit's stamina: " << FirstPl->getStamina() << std::endl;
 
@@ -100,35 +109,11 @@ void Battle(Unit* FirstPl, Unit* SecondPl) {
 		std::cout << "Requires " << FirstPl->requiredStamina(0, "df") << " stamina" << std::endl;
 		std::cout << "Unit's stamina: " << FirstPl->checkStamina();
 		*/
-		std::cout << "|" << std::setw(12) << std::setfill('_') << "3 - Use Special Powers";
-		std::cout << std::setw(12) << std::setfill('_') << std::endl;
-		std::cout << "Requires " << " inspiration" << std::endl;
-		std::cout << "Unit's inspiration: " << FirstPl->getInspiration() << std::endl;
-		std::cout << "|" << std::setw(12) << std::setfill('_') << "4 - Skip";
-		std::cout << std::setw(12) << std::setfill('_') << std::endl;
-		std::cin >> key_1;
-	}
-
-
-	if (SecondPl->checkAutoAttack()) {
-		key_2 = AutoAttack(SecondPl, FirstPl);
-	}
-	else {
-		std::cout << "Choose your attack:" << std::endl;
-		std::cout << "|" << "1 - Slice" << std::endl;
-		std::cout << "Requires " << SecondPl->requiredStamina(0, "hp") << " stamina" << std::endl;
-		std::cout << "Unit's stamina: " << SecondPl->getStamina() << std::endl;
-
-		/*std::cout << "|" << std::setw(12) << std::setfill('_') << "2 - Rape";
-		std::cout << std::setw(18) << std::setfill('_') << std::endl;
-		std::cout << "Requires " << SecondPl->requiredStamina(0, "df") << " stamina" << std::endl;
-		std::cout << "Unit's stamina: " << SecondPl->checkStamina();
-		*/
 		std::cout << "|" << "3 - Use Special Powers" << std::endl;
 		std::cout << "Requires " << " inspiration" << std::endl;
-		std::cout << "Unit's inspiration: " << SecondPl->getInspiration() << std::endl;
+		std::cout << "Unit's inspiration: " << FirstPl->getInspiration() << std::endl;
 		std::cout << "|" << "4 - Skip" << std::endl;
-		std::cin >> key_2;
+		std::cin >> key_1;
 	}
 
 	std::cout << FirstPl->getType() << "'s turn!" << std::endl;
@@ -173,49 +158,6 @@ void Battle(Unit* FirstPl, Unit* SecondPl) {
 		break;
 	}
 
-	std::cout << SecondPl->getType() << "'s turn!" << std::endl;
-
-	switch (key_2)
-	{
-	case 1: {
-		if (SecondPl->getStamina() <= SecondPl->requiredStamina(0, "hp")) {
-			std::cout << "Unfortunately you haven't got enough STAMINA to attack." << std::endl;
-			SecondPl->setStamina(100);
-			break;
-		}
-		Attack* pl1_hit = SecondPl->Hit(0);
-		Attack* pl2_hit = FirstPl->Hit(0);
-		SecondPl->info();
-		FirstPl->info();
-		int pl_dmg;
-		pl_dmg = pl1_hit->attack();
-		pl2_hit->fendoff(pl_dmg);
-
-		FirstPl->setStat(pl_dmg, pl2_hit->GetBaff());
-		SecondPl->setStat(0, pl1_hit->GetBaff());
-
-		SecondPl->info();
-		FirstPl->info();
-
-		SecondPl->setStamina(-1*pl1_hit->stamina_required("hp"));
-		break;
-	}
-	case 2:
-		std::cout << "Player 2 Uses defence attack" << std::endl;
-		break;
-	case 3:
-		std::cout << "Player 2 Uses skill" << std::endl;
-		//SecondPl->setInspiration(/**/);
-		SecondPl->setStamina(50);
-		break;
-	case 4:
-		SecondPl->setStamina(100);
-		break;
-	default:
-		break;
-	}
-
-
 }
 
 
@@ -235,11 +177,16 @@ void SingleArena(Unit* Player) {
 	int init_opp = Opponent->setInitiative();
 
 	for (int i = 0; AnyAlive(Player, Opponent); ++i) {
+		system("CLS");
 		std::cout << "STEP #" << i + 1 << std::endl;
-     	if (init_pl > init_opp)
+		if (init_pl > init_opp) {
 			Battle(Player, Opponent);
-		else
 			Battle(Opponent, Player);
+		}
+		else {
+			Battle(Opponent, Player);
+			Battle(Player, Opponent);
+		}
 		std::cout << "Press ENTER to CONTINUE" << std::endl;
 		std::getchar();
 		std::getchar();
@@ -323,6 +270,40 @@ void SingleArena(Unit* Player) {
 
   */
 
+void Team_List(UnArr& Players) {
+	for (int i = 0; i < Players.size(); ++i) {
+		Players[i]->unitMenu();
+	}
+}
+
+void Exclude_Dead(UnArr& Players) {
+	for (int i = 0; i < Players.size(); ++i) {
+		if (Players[i]->is_Dead()) {
+			Players.erase(Players.begin() + i);
+		}
+	}
+}
+
+void Team_Battle(UnArr& FirstPl, UnArr& SecondPl) {
+	for (int i = 0; i < FirstPl.size(); ++i) {
+		if (FirstPl[i]->checkAutoAttack()) {
+			int j;
+			j = AutoAttack(SecondPl);
+			Battle(FirstPl[i], SecondPl[j]); // First attacks, Second defence;
+		}
+		else {
+			if (!FirstPl[i]->is_Dead()) {
+				int j;
+				std::cout << "Choose opponent to attack" << std::endl;
+				std::cin >> j;
+				Battle(FirstPl[i], SecondPl[j]); // First attacks, Second defence;
+			}
+			else 
+				std::cout << "Unit is dead." << std::endl;
+		}
+	}
+}
+
 void TeamArena(Unit* Player) {
 	std::vector <Unit*> Opponents;
 	std::vector <Unit*> Players;
@@ -382,7 +363,7 @@ void TeamArena(Unit* Player) {
 	}
 
 
-	std::cout << "Define opponents to your teammates." << std::endl;
+	/*std::cout << "Define opponents to your teammates." << std::endl;
 	if (num_pl > num_opp) {
 		num_min = num_opp;
 		num_max = num_pl;
@@ -411,9 +392,21 @@ void TeamArena(Unit* Player) {
 			Players[i]->unitMenu();
 		}
 	}
+*/
 
+	for (int i = 0; ; ++i) {
+		Exclude_Dead(Players);
+		Exclude_Dead(Opponents);
 
-
+		if (summ_pl > summ_opp) {
+			Team_Battle(Players, Opponents);
+			Team_Battle(Opponents, Players);
+		}
+		else {
+			Team_Battle(Opponents, Players);
+			Team_Battle(Players, Opponents);
+		}
+	}
 
 
 }
