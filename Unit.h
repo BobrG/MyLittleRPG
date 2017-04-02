@@ -31,7 +31,7 @@ public:
 	*  and it's status. 
 	*/
 
-	virtual void info() = 0; //info about units stats;
+	void info(); //info about units stats;
 
 	int getHealth(); //get unit's HP;
 
@@ -75,6 +75,8 @@ public:
 	Buffs getEffects();
 
 	int getInspiration();
+
+	void useEffect(Buff& buff_);
 
 	void setInspiration(int eff);
 
@@ -140,7 +142,6 @@ public:
 	int setInitiative();
 	void setStat(int damage, Buffs& buff_, int mode);
 	void useSkill(); 
-	void info();
 	void replica();
 private:
 	// levels required for each ability;
@@ -154,7 +155,6 @@ public:
 	int setInitiative();
 	void setStat(int damage, Buffs& buff_, int mode);
 	//void useSkill(); 
-	void info(); //ctrl+c from previous task;
 	void replica();
 private:
 	// levels required for each ability;
@@ -168,7 +168,6 @@ public:
 	int setInitiative();
 	void setStat(int damage, Buffs& buff_, int mode);
 	//void useSkill(); 
-	void info();
 	void replica();
 private:
 	// levels required for each ability;
@@ -182,7 +181,6 @@ public:
 	int setInitiative();
 	void setStat(int damage, Buffs& buff_, int mode);
 	void useSkill(); 
-	void info();
 	void replica();
 private:
 	// levels required for each ability;
@@ -196,7 +194,6 @@ public:
 	int setInitiative();
 	void setStat(int damage, Buffs& buff_, int mode);
 	//void useSkill();
-	void info();
 	void replica();
 private:
 	// levels required for each ability;

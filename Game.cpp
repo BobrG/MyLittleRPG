@@ -78,10 +78,10 @@ int AutoAttack(Unit* Player, Unit* Opponent) {
 	if (0/*check inspiration*/) {
 		return 3;
 	}
-	if (Player->getStamina() >= Player->requiredStamina(0, "df") && Opponent->getDefence() != 0) {
+	if (Player->getStamina() >= Player->requiredStamina(0, "df") && Opponent->getDefence() > 0) {
 		return 2;
 	}
-	if (Player->getStamina() >= Player->requiredStamina(0, "hp") && Opponent->getHealth() != 0) {
+	if (Player->getStamina() >= Player->requiredStamina(0, "hp") && Opponent->getHealth() > 0) {
 		return 1;
 	}
 	else
@@ -89,10 +89,10 @@ int AutoAttack(Unit* Player, Unit* Opponent) {
 }
 
 void Battle(Unit* FirstPl, Unit* SecondPl) {
-	int key_1 = 0;
+	int key = 0;
 	
 	if (FirstPl->checkAutoAttack()) {
-		key_1 = AutoAttack(FirstPl,SecondPl);
+		key = AutoAttack(FirstPl,SecondPl);
 	}
 	else {
 		std::cout << "Choose your attack:" << std::endl;
@@ -100,20 +100,20 @@ void Battle(Unit* FirstPl, Unit* SecondPl) {
 		std::cout << "Requires " << FirstPl->requiredStamina(0,"hp") << " stamina" << std::endl;
 		std::cout << "Unit's stamina: " << FirstPl->getStamina() << std::endl;
 
-		std::cout << "|"  << "2 - Rape";
+		std::cout << "|"  << "2 - Rape" << std::endl;
 		std::cout << "Requires " << FirstPl->requiredStamina(0, "df") << " stamina" << std::endl;
-		std::cout << "Unit's stamina: " << FirstPl->getStamina();
+		std::cout << "Unit's stamina: " << FirstPl->getStamina() << std::endl;
 		
 		std::cout << "|" << "3 - Use Special Powers" << std::endl;
 		std::cout << "Requires " << " inspiration" << std::endl;
 		std::cout << "Unit's inspiration: " << FirstPl->getInspiration() << std::endl;
 		std::cout << "|" << "4 - Skip" << std::endl;
-		std::cin >> key_1;
+		std::cin >> key;
 	}
 
 	std::cout << FirstPl->getType() << "'s turn!" << std::endl;
 
-	switch (key_1)
+	switch (key)
     {
 	case 1: {
 		if (FirstPl->getStamina() <= FirstPl->requiredStamina(0, "hp")) {
@@ -123,40 +123,64 @@ void Battle(Unit* FirstPl, Unit* SecondPl) {
 		}
 		Attack* pl1_hit = FirstPl->Hit(0);
 		Attack* pl2_hit = SecondPl->Hit(0);
-		FirstPl->info();
-		SecondPl->info();
+		
 		int pl_dmg;
 		pl_dmg = pl1_hit->attack();
 		pl2_hit->fendoff(pl_dmg);
 		FirstPl->addEffect(pl1_hit->GetBaff());
 
-		SecondPl->setStat(pl_dmg, pl2_hit->GetBaff());
+		SecondPl->setStat(pl_dmg, pl2_hit->GetBaff(), key);
 		FirstPl->addEffect(SecondPl->getAffects());
 
-		FirstPl->setStat(0, pl1_hit->GetBaff());
-
-		FirstPl->info();
-		SecondPl->info();
+		FirstPl->setStat(0, pl1_hit->GetBaff(), key);
 
 		FirstPl->setStamina(-1*pl1_hit->stamina_required("hp"));
 		FirstPl->setInspiration(-1);
 		break; 
 	}
-	case 2:
-		std::cout << FirstPl->getType() << " Uses defence attack" << std::endl;
-		break;
-	case 3:
+	case 2: {
+		if (FirstPl->getStamina() <= FirstPl->requiredStamina(0, "hp")) {
+			std::cout << "Unfortunately you haven't got enough STAMINA to attack." << std::endl;
+			FirstPl->setStamina(100);
+			break;
+		}
+		// creating a weapon;
+		Attack* pl1_hit = FirstPl->Hit(0);
+		Attack* pl2_hit = SecondPl->Hit(0);
+		// produce weapon damage;
+		int pl_dmg;
+		// make damage;
+		pl_dmg = pl1_hit->attack();
+		// protect;
+		pl2_hit->fendoff(pl_dmg);
+		// add weapon affection to vector of effects on unit FirstPl;
+		FirstPl->addEffect(pl1_hit->GetBaff());
+		// count SecondPl unit stats;
+		SecondPl->setStat(pl_dmg, pl2_hit->GetBaff(), key);
+		// add SecondPl unit's affection to vector of effects on unit FirstPl;
+		FirstPl->addEffect(SecondPl->getAffects());
+		// count side effects of FirstPl unit;
+		FirstPl->setStat(0, FirstPl->getEffects(), key);
+		// count stamina changes;
+		FirstPl->setStamina(-1 * pl1_hit->stamina_required("df"));
+		// count inspiration. NOT IMPLEMENTED YET!!!
+		FirstPl->setInspiration(-1);
+		break; 
+	}
+	case 3: {
 		/*std::cout << FirstPl->getType() << " Uses skill" << std::endl;
 		FirstPl->useSkill();
 		SecondPl->setStat(0, FirstPl->getEffects());
 		FirstPl->setInspiration(FirstPl->requiredInspiration());
 		FirstPl->setStamina(50);*/
-		std::cout << "Not added yet. However, we hope to implement this category soon" << std::endl;
-		break;
-	case 4:
-		std::cout << FirstPl->getType() << " Skips step!" << std::endl;
+		std::cout << "Not added yet. However, we hope to implement this category soon." << std::endl;
+		break; 
+	}
+	case 4: {
+		std::cout << FirstPl->getType() << " Skips step! Add replenish STAMINA." << std::endl;
 		FirstPl->setStamina(100);
-		break;
+		break; 
+	}
 	default:
 		break;
 	}
@@ -177,9 +201,22 @@ void SingleArena(Unit* Player) {
 	int init_pl = Player->setInitiative();
 	int init_opp = Opponent->setInitiative();
 
+	if (init_pl > init_opp) {
+		std::cout << "Player attacks first!" << std::endl;
+	}
+	else
+		std::cout << "Opponent attacks first!" << std::endl;
+	std::cout << "Press ENTER to CONTINUE" << std::endl;
+	std::getchar();
+	std::getchar();
+
 	for (int i = 0; AnyAlive(Player, Opponent); ++i) {
 		system("CLS");
 		std::cout << "STEP #" << i + 1 << std::endl;
+		
+		Player->info();
+		Opponent->info();
+		
 		if (init_pl > init_opp) {
 			Battle(Player, Opponent);
 			Battle(Opponent, Player);
@@ -188,6 +225,10 @@ void SingleArena(Unit* Player) {
 			Battle(Opponent, Player);
 			Battle(Player, Opponent);
 		}
+		
+		Player->info();
+		Opponent->info();
+
 		std::cout << "Press ENTER to CONTINUE" << std::endl;
 		std::getchar();
 		std::getchar();
@@ -276,6 +317,7 @@ void Team_List(UnArr& Players) {
 		std::cout << "Player #" << i + 1 << std::endl;
 		Players[i]->unitMenu();
 	}
+	std::cout << std::endl;
 }
 
 void Exclude_Dead(UnArr& Players) {
@@ -289,21 +331,46 @@ void Exclude_Dead(UnArr& Players) {
 
 void Team_Battle(UnArr& FirstPl, UnArr& SecondPl) {
 	for (int i = 0; i < FirstPl.size(); ++i) {
+		std::cout << "Player #" << i + 1 << std::endl;
+		FirstPl[i]->info();
+		
 		if (FirstPl[i]->checkAutoAttack()) {
 			int j;
 			j = AutoAttack(SecondPl);
+			SecondPl[j]->info();
 			Battle(FirstPl[i], SecondPl[j]); // First attacks, Second defence;
+			FirstPl[i]->info();
+			SecondPl[j]->info();
 		}
 		else {
 			if (!FirstPl[i]->is_Dead()) {
 				int j;
 				std::cout << "Choose opponent to attack" << std::endl;
 				std::cin >> j;
+				SecondPl[j-1]->info();
 				Battle(FirstPl[i], SecondPl[j - 1]); // First attacks, Second defence;
+				FirstPl[i]->info();
+				SecondPl[j - 1]->info();
 			}
 			else 
 				std::cout << "Unit is dead." << std::endl;
 		}
+		Buffs tmp = FirstPl[i]->getAffects();
+		if (!(tmp.empty())) {
+			for (int j = 0; j < tmp.size(); ++j) {
+				tmp[j]->Set_STatus(true);
+				if (i - 1 >= 0)
+				FirstPl[i - 1]->useEffect(*tmp[j]);
+				if (i + 1 < FirstPl.size())
+				FirstPl[i + 1]->useEffect(*tmp[j]);
+				tmp[j]->~Buff();
+			}
+		}
+
+		std::cout << "Next player attacks!" << std::endl;
+		std::cout << "Press ENTER to CONTINUE" << std::endl;
+		std::getchar();
+		std::getchar();
 	}
 }
 
@@ -397,6 +464,16 @@ void TeamArena(Unit* Player) {
 	}
 */
 
+	if (summ_pl > summ_opp) {
+		std::cout << "Player's team attacks first!" << std::endl;
+	}
+	else
+		std::cout << "Opponents's team attacks first!" << std::endl;
+
+	std::cout << "Press ENTER to CONTINUE" << std::endl;
+	std::getchar();
+	std::getchar();
+
 	for (int i = 0; ; ++i) {
 		system("CLS");
 		std::cout << "STEP #" << i + 1 << std::endl;
@@ -407,10 +484,12 @@ void TeamArena(Unit* Player) {
 
 		if (summ_pl > summ_opp) {
 			Team_Battle(Players, Opponents);
+			system("CLS");
 			Team_Battle(Opponents, Players);
 		}
 		else {
 			Team_Battle(Opponents, Players);
+			system("CLS");
 			Team_Battle(Players, Opponents);
 		}
 		

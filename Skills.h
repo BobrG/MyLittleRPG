@@ -7,9 +7,13 @@ class Buff {
 public:
 	Buff();
 
-	void Init_Buff(int eff, int n, std::string type_);
+	virtual void Init_Buff(int eff, int n, std::string type_, bool activate);
 
-	void Apply_Effect(int* stat);
+	virtual void Apply_Effect(int* stat);
+
+	bool Return_Status();
+
+	void Set_STatus(bool activate);
 
 	std::string Return_Type();
 
@@ -17,15 +21,17 @@ public:
 
 	virtual ~Buff();
 protected:
+	bool active;
 	int effect;
 	int num_steps;
+	int dest;
 	std::string type;
 };
 
 class Debuff :public Buff {
 public:
 
-	void Init_Buff(int dmg, int n, std::string type_);
+	void Init_Buff(int eff, int n, std::string type_, bool activate);
 
 	void Apply_Effect(int* stat);
 
