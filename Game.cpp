@@ -100,7 +100,7 @@ void Battle(Unit* FirstPl, Unit* SecondPl) {
 		std::cout << "Requires " << FirstPl->requiredStamina(0,"hp") << " stamina" << std::endl;
 		std::cout << "Unit's stamina: " << FirstPl->getStamina() << std::endl;
 
-		std::cout << "|"  << "2 - Rape" << std::endl;
+		std::cout << "|"  << "2 - Smash" << std::endl;
 		std::cout << "Requires " << FirstPl->requiredStamina(0, "df") << " stamina" << std::endl;
 		std::cout << "Unit's stamina: " << FirstPl->getStamina() << std::endl;
 		

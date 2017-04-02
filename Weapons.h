@@ -23,6 +23,9 @@ public:
 
 	Buffs GetBaff();
 
+	/* Function stamina_required returns the amount of stamina which is needed to produce attack
+	*  on health points or defence points of unit;
+	*/
 	int stamina_required(std::string type);
 
 	virtual ~Attack() = default; // not defined yet;
@@ -37,16 +40,11 @@ protected:
 	int stamina_df;
 	int insp;
 
-	/* baff is a vector of side effects:
-	*  baff[0] - effects on Stamina (default)
-	*  baff[1] - effects on HP (+/-)
-	*  baff[2] - effects on HP (multiplication)
-	*  baff[3] - special effects(poisoning for ex.)
-	*/
+	// special effects produced by weapon; 
 	Buffs spec_eff;
 };
 
-class Sword : public Attack { //for Orc;
+class Sword : public Attack { 
 public:
 	Sword();
 	int attack();
@@ -63,7 +61,7 @@ private:
 	std::uniform_int_distribution<int> dist1;
 };
 
-class Staff : public Attack { //for Wizard;
+class Staff : public Attack { 
 public:
 	Staff();
 	int attack();
@@ -77,7 +75,7 @@ private:
 	std::uniform_int_distribution<int> dist1;
 };
 
-class Shield : public Attack { //for Dwarf
+class Shield : public Attack { 
 public:
 	Shield();
 	int attack();
@@ -90,18 +88,3 @@ private:
 	std::uniform_int_distribution<int> dist;
 	std::uniform_int_distribution<int> dist1;
 };
-
-class PowerofNature : public Attack { //todo: add new kind of weapon;
-public:
-	PowerofNature();
-	int attack();
-	void fendoff(int damage);
-	void info();
-private:
-	int max_dmg = 25;
-	std::random_device rd;
-	std::mt19937 mt;
-	std::uniform_int_distribution<int> dist;
-	std::uniform_int_distribution<int> dist1;
-};
-
