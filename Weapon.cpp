@@ -25,8 +25,10 @@ Shield::Shield() : rd()
 , dist(1, max_dmg)
 , dist1(1, 100)
 {
+	// required stamina for using this weapon;
 	stamina_hp = 100;
 	stamina_df = 50;
+	// inspiration added to unit after using this weapon;
 	insp = 1;
 }
 
@@ -34,14 +36,13 @@ int Shield::attack() {
 	Buff* b;
 	DMG = dist(mt);
 	info();
-	//b->Init_Buff(35,0,"st");
-	//spec_eff.push_back(b);
 	return DMG;
 }
 
 void Shield::fendoff(int damage) {
 	Buff* b = new Buff;
 	if (dist1(mt) > 50) {
+		// creates a buff and transfers it to unit;
 		b->Init_Buff((damage * 5) / 10, 1, "hp", true);
 		spec_eff.push_back(b);
 		std::cout << "P R O T E C T E D" << std::endl;
@@ -89,7 +90,6 @@ Staff::Staff() : rd()
 , dist(1, max_dmg)
 , dist1(1, 100)
 {
-	//baff.resize(4);
 	stamina_df = 30;
 	stamina_hp = 50;
 	insp = 3;
@@ -104,12 +104,11 @@ int Staff::attack() {
 
 	}
 	info();
-	//baff[0] = 35;
 	return DMG;
 }
 
 void Staff::fendoff(int damage) {
-	//empty;
+	//empty - no defence;
 }
 
 void Staff::info() {
@@ -152,8 +151,7 @@ Sword::Sword() : rd()
 , dist(1, max_dmg)
 , dist1(1, 100)
 {
-	//baff.resize(3);
-	stamina_hp = 250;
+    stamina_hp = 250;
 	stamina_df = 100;
 	insp = 2;
 }
@@ -166,7 +164,6 @@ int Sword::attack() {
 	else
 		DMG = dist(mt);
 	info();
-	//baff[0] = 35;
 	return DMG;
 }
 

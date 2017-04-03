@@ -6,6 +6,29 @@
 
 typedef std::vector<Attack*> Weapons;
 
+/* The main difference among units is in SetStat function as different classes of units 
+*  respond on attack in their unique way.
+*  What is added for now:
+*  - Berserks:
+*   with 30% probability can avoid any damage;
+*  - Wizard:
+*   with 60% probability hills himself and increases HP on random variable less than 100 and more 40;
+*  - Paladin:
+*   with 50% probability hills previous and next teammates (towards the Paladin position) with 1/2 of received damage;
+*  - Defender:
+*   with 75% protects himself from 1/4 damage;
+*  - Demon Slayer:
+*   with 50% produces the same damage to enemy who attacked;
+*
+*
+*  Effects and Affects:
+*  I considered that it would be great to separate buffs which unit applies to opponent (or friend)
+*  from buffs which were added to unit. 
+*  Due to this strategy buffs appeared in each battle after using a weapon or skill are added to unit's vector
+*  of *affects* because this buffs should be transported to opponents vector of *effects* later. This *affects*
+*  will be shifted to opponent during the battle, added to his vector of *effects* and applied to him. 
+*/
+
 class Unit {
 public:
 	/* Function Hit():
@@ -43,7 +66,11 @@ public:
 
 	//virtual void useSkill();
 
-	virtual int setInitiative() = 0;//sets and returns unit's initiative before each battle;
+	/* function setInitiative sets and returns unit's initiative.
+	*  The value is randomized from the range defined for each unique unite.
+	*/
+
+	virtual int setInitiative() = 0;
 
 	/* Function replica():
 	*  virtual void function, throws a unit's sentence.
@@ -52,10 +79,10 @@ public:
 
 	virtual void replica() = 0; //screaming time;
 	
-	/* Function SetStat(int damage):
+	/* Function SetStat(int damage, Buffs& buff_, int mode):
 	*  virtual void function, which takes damage as 
-	*  an agrument and updates heroes data [1]. Inheritance 
-	*  adds baff and some special abilities of each hero.
+	*  an agrument and updates heroes data. Also adds all side effects collected during the
+	*  battle to the unit.
 	*/
 
 	virtual void setStat(int damage, Buffs& buff_, int mode); //updates hero's stats 
@@ -66,19 +93,40 @@ public:
 	*/
 	int getDefence();
 
+	/* function AddAffection attaches input value (vector of buffs) to
+	*  unit's affection vector. More details about effects and affects find above;
+	*/
+
 	void addAffection(Buffs& buff_);
+
+	/* function AddEffect attaches input value (vector of buffs) to
+	*  unit's vector of effects. More details about effects and affects find above;
+	*/
 
 	void addEffect(Buffs& buff_);
 
+	/* returns vector of affects*/
+
 	Buffs getAffects();
+
+	/* return vector of effects*/
 
 	Buffs getEffects();
 
+	/* returns unit's inspiration */
+
 	int getInspiration();
+
+	/* function useEffect implements buffs added in the vector of effects.*/
 
 	void useEffect(Buff& buff_);
 
+	/* effects inspiration with input value.*/
+
 	void setInspiration(int eff);
+
+	/* returns required inspiration for skill.
+	NOT IMPLEMENTED YET!!!*/
 
 	int requiredInspiration();
 
@@ -86,9 +134,19 @@ public:
 
 	void setName();
 
+	/* function setAutoAttack turns on the auto attack mode
+	*  and in this case unit will be fighting with help of AI.
+	*  Is especially useful for bots.
+	*/
+
 	void setAutoAttack(bool on);
 
+	/* Defines whether unit is bot or a user.*/
+
 	bool checkAutoAttack();
+
+	/* returns amount of stamina required for attack on defined type of points (health or defence)
+	*  for unit's weapon. FOR NOW UNIT HAS ONLY ONE WEAPON WITH INDEX 0!!!*/
 
 	int requiredStamina(int i, std::string type);
 
@@ -116,7 +174,6 @@ protected:
 	*  [1] - stamina;
 	*  [2] - inspiration;
 	*  gear - vector of weapons(pointers on class Attack);
-	*  skill - vector of special skills unique for each unit;
 	*  buff - vector of side effects(pointers on elements of class Buff);
 	*/
 	std::string type;
@@ -130,7 +187,7 @@ protected:
 	std::vector<int> battle_stats;
 	Buffs spec_Eff; // effects caused by opponents;
 	Buffs spec_Aff; // affection caused by unit on opponents;
-	Weapons gear;
+	Weapons gear; //FOR NOW UNIT HAS ONLY ONE WEAPON WITH INDEX 0!!!
 	// Diez simbol is used to represent info. about character's data.
 	char InfoBlock = '#';
 	
@@ -141,10 +198,10 @@ public:
 	void initUnit();
 	int setInitiative();
 	void setStat(int damage, Buffs& buff_, int mode);
-	void useSkill(); 
+	void useSkill(); // not implemented yet;
 	void replica();
 private:
-	// levels required for each ability;
+	// levels required for each ability; NOT IMPLEMENTED YET!!!
 	std::vector <int> spec_ab;
 	int max_hp;
 };

@@ -339,7 +339,7 @@ void Paladin::setStat(int damage, Buffs& buff_, int mode) {
 		if (DF < 0) 
 			DF = 0;
 	}
-	if (dist1(gen) > 30 && damage != 0) {
+	if (dist1(gen) > 50 && damage != 0) {
 		Buff* b = new Buff;
 		std::cout << type << " hills his teammates!" << std::endl;
 		std::cout << "Hills " << damage / 2 << " points" << std::endl;
@@ -441,7 +441,7 @@ void Wizard::setStat(int damage, Buffs& buff_, int mode) {
 	else
 		DF -= damage;
 	    
-	if ((hill = dist1(gen)) > 30) {
+	if ((hill = dist1(gen)) > 40) {
 		std::cout << "Wizard hills himself" << std::endl;
 		std::cout << "Health increases on " << hill << " points" << std::endl;
 		HP += hill;

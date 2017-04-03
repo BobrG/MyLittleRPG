@@ -13,7 +13,6 @@ void list() {
 	std::cout << " any other key - /leave" << std::endl;
 }
 
-
 void create(int key, Unit** u) {
 	if (key == 1) {
 		*u = new Wizard;
@@ -121,19 +120,22 @@ void Battle(Unit* FirstPl, Unit* SecondPl) {
 			FirstPl->setStamina(100);
 			break;
 		}
+		// creating weapon to attack;
 		Attack* pl1_hit = FirstPl->Hit(0);
 		Attack* pl2_hit = SecondPl->Hit(0);
-		
+		// produce weapon damage;
 		int pl_dmg;
 		pl_dmg = pl1_hit->attack();
+		// a try to defend;
 		pl2_hit->fendoff(pl_dmg);
+		// add first player affection on second player to a vector of affects;
 		FirstPl->addEffect(pl1_hit->GetBaff());
-
+		// apply damage and side effects to second player;
 		SecondPl->setStat(pl_dmg, pl2_hit->GetBaff(), key);
 		FirstPl->addEffect(SecondPl->getAffects());
-
+		// apply side effects to first player;
 		FirstPl->setStat(0, pl1_hit->GetBaff(), key);
-
+		// count stamina and inspiration;
 		FirstPl->setStamina(-1*pl1_hit->stamina_required("hp"));
 		FirstPl->setInspiration(-1);
 		break; 
@@ -295,6 +297,8 @@ void SingleArena(Unit* Player) {
 
   TODO: Add class system. Expand and improve Skills class;
 
+  Possible skills. NOT IMPLEMENTED YET;
+
   RAGE - Warrior skill:
   Increases STAMINA and all stats;
 
@@ -355,6 +359,7 @@ void Team_Battle(UnArr& FirstPl, UnArr& SecondPl) {
 			else 
 				std::cout << "Unit is dead." << std::endl;
 		}
+		// applying buffs to nearby teammates;
 		Buffs tmp = FirstPl[i]->getAffects();
 		if (!(tmp.empty())) {
 			for (int j = 0; j < tmp.size(); ++j) {
@@ -381,7 +386,7 @@ void TeamArena(Unit* Player) {
     int summ_opp = 0;
 	int num_opp, num_pl, num_min, num_max;
 
-
+	// creating your team;
 	std::cout << "Hire your teammates!" << std::endl << "How much do you need?" << std::endl;
 	std::cin >> num_pl;
 	Players.resize(num_pl); 
@@ -397,7 +402,7 @@ void TeamArena(Unit* Player) {
 	}
 	Players.insert(Players.begin(),Player);
 
-
+	// defining opponents;
 	std::cout << "Input size of your opponent team:" << std::endl;
 	std::cin >> num_opp;
 	Opponents.resize(num_opp);
@@ -481,7 +486,7 @@ void TeamArena(Unit* Player) {
 		Team_List(Players);
 		std::cout << "OPPONENT'S TEAM:" << std::endl;
 		Team_List(Opponents);
-
+		// checking initiative;
 		if (summ_pl > summ_opp) {
 			Team_Battle(Players, Opponents);
 			system("CLS");
@@ -492,7 +497,7 @@ void TeamArena(Unit* Player) {
 			system("CLS");
 			Team_Battle(Players, Opponents);
 		}
-		
+	
 		Exclude_Dead(Players);
 		Exclude_Dead(Opponents);
 
