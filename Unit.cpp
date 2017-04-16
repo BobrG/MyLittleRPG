@@ -96,10 +96,11 @@ void Unit::setStat(int damage, Buffs& buff_, int mode) {
 	if (!buff_.empty()) {
 		for (int i = 0; i < buff_.size(); ++i) {
 			if (!buff_[i]->Return_Status()) {
-				spec_Eff.push_back(buff_[i]);
 				buff_[i]->~Buff();
 				buff_.erase(buff_.begin() + i);
 			}
+			else
+				spec_Eff.push_back(buff_[i]);
 		}
 	}
 	for (int i = 0; i < spec_Eff.size(); ++i) {
@@ -352,10 +353,11 @@ void Paladin::setStat(int damage, Buffs& buff_, int mode) {
 	if (!buff_.empty()) {
 		for (int i = 0; i < buff_.size(); ++i) {
 			if (!buff_[i]->Return_Status()) {
-				spec_Eff.push_back(buff_[i]);
 				buff_[i]->~Buff();
 				buff_.erase(buff_.begin() + i);
 			}
+			else
+				spec_Eff.push_back(buff_[i]);			
 		}
 	}
 
@@ -452,10 +454,11 @@ void Wizard::setStat(int damage, Buffs& buff_, int mode) {
 	if (!buff_.empty()) {
 		for (int i = 0; i < buff_.size(); ++i) {
 			if (!buff_[i]->Return_Status()) {
-				spec_Eff.push_back(buff_[i]);
 				buff_[i]->~Buff();
 				buff_.erase(buff_.begin() + i);
 			}
+			else
+				spec_Eff.push_back(buff_[i]);
 		}
 	}
 
@@ -548,10 +551,11 @@ void Berserk::setStat(int damage, Buffs& buff_, int mode) {
 	if (!buff_.empty()) {
 		for (int i = 0; i < buff_.size(); ++i) {
 			if (!buff_[i]->Return_Status()) {
-				spec_Eff.push_back(buff_[i]);
 				buff_[i]->~Buff();
 				buff_.erase(buff_.begin() + i);
 			}
+			else
+				spec_Eff.push_back(buff_[i]);
 		}
 	}
 	for (int i = 0; i < spec_Eff.size(); ++i) {
@@ -648,10 +652,11 @@ void Defender::setStat(int damage, Buffs& buff_, int mode) {
 	if (!buff_.empty()) {
 		for (int i = 0; i < buff_.size(); ++i) {
 			if (!buff_[i]->Return_Status()) {
-				spec_Eff.push_back(buff_[i]);
 				buff_[i]->~Buff();
 				buff_.erase(buff_.begin() + i);
 			}
+			else
+				spec_Eff.push_back(buff_[i]);
 		}
 	}
 	
@@ -733,10 +738,11 @@ void DemonSlayer::setStat(int damage, Buffs& buff_, int mode) {
 	if (!buff_.empty()) {
 		for (int i = 0; i < buff_.size(); ++i) {
 			if (!buff_[i]->Return_Status()) {
-				spec_Eff.push_back(buff_[i]);
 				buff_[i]->~Buff();
 				buff_.erase(buff_.begin() + i);
 			}
+			else
+				spec_Eff.push_back(buff_[i]);
 		}
 	}
 
