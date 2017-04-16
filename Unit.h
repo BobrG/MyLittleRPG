@@ -26,7 +26,7 @@ typedef std::vector<Attack*> Weapons;
 *  from buffs which were added to unit. 
 *  Due to this strategy buffs appeared in each battle after using a weapon or skill are added to unit's vector
 *  of *affects* because this buffs should be transported to opponents vector of *effects* later. This *affects*
-*  will be shifted to opponent during the battle, added to his vector of *effects* and applied to him. 
+*  will be shifted to opponent during the battle, added to his vector of *effects*	 and applied to him. 
 */
 
 class Unit {

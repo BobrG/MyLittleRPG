@@ -95,7 +95,7 @@ void Unit::setStat(int damage, Buffs& buff_, int mode) {
 
 	if (!buff_.empty()) {
 		for (int i = 0; i < buff_.size(); ++i) {
-			if (buff_[i]->Return_Status()) {
+			if (!buff_[i]->Return_Status()) {
 				spec_Eff.push_back(buff_[i]);
 				buff_[i]->~Buff();
 				buff_.erase(buff_.begin() + i);
@@ -112,6 +112,7 @@ void Unit::setStat(int damage, Buffs& buff_, int mode) {
 			// when buff's effects end we delete them from vector of buffs; 
 			spec_Eff[i]->~Buff();
 			spec_Eff.erase(spec_Eff.begin() + i);
+			i--;
 		}
 	}
 
@@ -187,7 +188,7 @@ void Unit::info() {
 				std::cout << std::endl;
 			}
 			else {
-				std::cout << "|_HealthPoints_" << std::setw(6) << std::right << std::setfill('_') << "|_";
+				std::cout << "|_DefencePoints_" << std::setw(6) << std::right << std::setfill('_') << "|_";
 				std::cout << std::setw(3) << std::left << std::setfill('_') << HP << "|";
 				SetConsoleTextAttribute(hstdout, FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY);
 				for (int i = 0; i < HP; i = i + 10) {
@@ -350,7 +351,7 @@ void Paladin::setStat(int damage, Buffs& buff_, int mode) {
 
 	if (!buff_.empty()) {
 		for (int i = 0; i < buff_.size(); ++i) {
-			if (buff_[i]->Return_Status()) {
+			if (!buff_[i]->Return_Status()) {
 				spec_Eff.push_back(buff_[i]);
 				buff_[i]->~Buff();
 				buff_.erase(buff_.begin() + i);
@@ -370,6 +371,7 @@ void Paladin::setStat(int damage, Buffs& buff_, int mode) {
 			// when buff's effects end we delete them from vector of buffs; 
 			spec_Eff[i]->~Buff();
 			spec_Eff.erase(spec_Eff.begin() + i);
+			i--;
 		}
 	}
 
@@ -418,7 +420,7 @@ void Paladin::replica() {
 void Wizard::initUnit() {
 	Staff* weapon = new Staff;
 	type = "Wizard";
-	HP = 250;
+	HP = 100;
 	DF = 50;
 	level = 0;
 	init_max = 20;
@@ -449,7 +451,7 @@ void Wizard::setStat(int damage, Buffs& buff_, int mode) {
 
 	if (!buff_.empty()) {
 		for (int i = 0; i < buff_.size(); ++i) {
-			if (buff_[i]->Return_Status()) {
+			if (!buff_[i]->Return_Status()) {
 				spec_Eff.push_back(buff_[i]);
 				buff_[i]->~Buff();
 				buff_.erase(buff_.begin() + i);
@@ -467,6 +469,7 @@ void Wizard::setStat(int damage, Buffs& buff_, int mode) {
 			// when buff's effects end we delete them from vector of buffs; 
 			spec_Eff[i]->~Buff();
 			spec_Eff.erase(spec_Eff.begin() + i);
+			i--;
 		}
 	}
 
@@ -513,7 +516,7 @@ void Wizard::replica() {
 void Berserk::initUnit() {
 	Sword* weapon = new Sword;
 	type = "Berserk";
-	HP = 350;
+	HP = 100;
 	DF = 100;
 	level = 0;
 	init_max = 30;
@@ -540,11 +543,11 @@ void Berserk::setStat(int damage, Buffs& buff_, int mode) {
 		}
 	}
 	else
-		std::cout << type << "reflected all damage!" << std::endl;
+		std::cout << type << " reflected all damage!" << std::endl;
 
 	if (!buff_.empty()) {
 		for (int i = 0; i < buff_.size(); ++i) {
-			if (buff_[i]->Return_Status()) {
+			if (!buff_[i]->Return_Status()) {
 				spec_Eff.push_back(buff_[i]);
 				buff_[i]->~Buff();
 				buff_.erase(buff_.begin() + i);
@@ -561,6 +564,7 @@ void Berserk::setStat(int damage, Buffs& buff_, int mode) {
 			// when buff's effects end we delete them from vector of buffs; 
 			spec_Eff[i]->~Buff();
 			spec_Eff.erase(spec_Eff.begin() + i);
+			i--;
 		}
 	}
 
@@ -611,7 +615,7 @@ void Berserk::replica() {
 void Defender::initUnit() {
 	Sword* weapon = new Sword;
 	type = "Defender";
-	HP = 250;
+	HP = 100;
 	DF = 300;
 	level = 0;
 	init_max = 30;
@@ -630,7 +634,7 @@ void Defender::setStat(int damage, Buffs& buff_, int mode) {
 
 	if (dist1(gen) > 25) {
 		std::cout << "P R O T E C T E D !" << std::endl;
-		std::cout << type << "got " << (damage * 25) / 100 << " damage!" << std::endl;
+		std::cout << type << " got " << (damage * 25) / 100 << " damage!" << std::endl;
 		if (DF <= 0 || mode == 1) {
 			HP -= (damage * 25) / 100;
 		}
@@ -643,7 +647,7 @@ void Defender::setStat(int damage, Buffs& buff_, int mode) {
 
 	if (!buff_.empty()) {
 		for (int i = 0; i < buff_.size(); ++i) {
-			if (buff_[i]->Return_Status()) {
+			if (!buff_[i]->Return_Status()) {
 				spec_Eff.push_back(buff_[i]);
 				buff_[i]->~Buff();
 				buff_.erase(buff_.begin() + i);
@@ -661,6 +665,7 @@ void Defender::setStat(int damage, Buffs& buff_, int mode) {
 			// when buff's effects end we delete them from vector of buffs; 
 			spec_Eff[i]->~Buff();
 			spec_Eff.erase(spec_Eff.begin() + i);
+			i--;
 		}
 	}
 
@@ -689,7 +694,7 @@ void Defender::replica() {
 void DemonSlayer::initUnit() {
 	Staff* weapon = new Staff;
 	type = "DemonSlayer";
-	HP = 300;
+	HP = 100;
 	DF = 50;
 	level = 0;
 	init_max = 25;
@@ -727,7 +732,7 @@ void DemonSlayer::setStat(int damage, Buffs& buff_, int mode) {
 
 	if (!buff_.empty()) {
 		for (int i = 0; i < buff_.size(); ++i) {
-			if (buff_[i]->Return_Status()) {
+			if (!buff_[i]->Return_Status()) {
 				spec_Eff.push_back(buff_[i]);
 				buff_[i]->~Buff();
 				buff_.erase(buff_.begin() + i);
@@ -745,6 +750,7 @@ void DemonSlayer::setStat(int damage, Buffs& buff_, int mode) {
 			// when buff's effects end we delete them from vector of buffs; 
 			spec_Eff[i]->~Buff();
 			spec_Eff.erase(spec_Eff.begin() + i);
+			i--;
 		}
 	}
 }

@@ -1,10 +1,6 @@
 #include <string>
 #include "Skills.h"
 
-Buff::Buff() {
-
-}
-
 void Buff::Apply_Effect(int* stat) {
 	*stat += effect;
 	num_steps--;

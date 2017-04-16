@@ -1,5 +1,6 @@
 #include <iostream>
 #include <random>
+#include <algorithm>
 #include <iomanip>
 #include "Game.h"
 #include "Unit.h"
@@ -34,8 +35,28 @@ void create(int key, Unit** u) {
 	}
 }
 
+
+
 bool AnyAlive(Unit* a, Unit* b) {
 	return (a->getHealth() > 0 && b->getHealth() > 0);
+}
+
+bool AnyAlive(UnArr& a, UnArr& b) {
+	bool flag_a, flag_b;
+	for (int i = 0; i < a.size(); ++i) {
+		if (!a[i]->is_Dead()) {
+			flag_a = true;
+			break;
+		}
+	}
+	for (int i = 0; i < a.size(); ++i) {
+		if (!b[i]->is_Dead()) {
+			flag_b = true;
+			break;
+		}
+	}
+	return (flag_a && flag_b);
+
 }
 
 void Arena(Unit* Player) {
@@ -351,6 +372,13 @@ void Team_Battle(UnArr& FirstPl, UnArr& SecondPl) {
 				int j;
 				std::cout << "Choose opponent to attack" << std::endl;
 				std::cin >> j;
+				if (j > SecondPl.size() || j < 0) {
+					std::cout << "Wrong choice, be carefull!" << std::endl;
+					std::cout << "Press ENTER to CONTINUE" << std::endl;
+					std::getchar();
+					std::getchar();
+					Team_Battle(FirstPl, SecondPl);
+				}
 				SecondPl[j-1]->info();
 				Battle(FirstPl[i], SecondPl[j - 1]); // First attacks, Second defence;
 				FirstPl[i]->info();
@@ -403,6 +431,11 @@ void TeamArena(Unit* Player) {
 	Players.insert(Players.begin(),Player);
 
 	// defining opponents;
+	std::cout << "Player's team containes " << Players.size() << " units:" << std::endl;
+	for (int i = 0; i < Players.size(); ++i) {
+		std::cout << Players[i]->getType() << " ";
+	}
+	std::cout << ";" << std::endl;
 	std::cout << "Input size of your opponent team:" << std::endl;
 	std::cin >> num_opp;
 	Opponents.resize(num_opp);
@@ -479,7 +512,7 @@ void TeamArena(Unit* Player) {
 	std::getchar();
 	std::getchar();
 
-	for (int i = 0; ; ++i) {
+	for (int i = 0; AnyAlive(Players,Opponents) ; ++i) {
 		system("CLS");
 		std::cout << "STEP #" << i + 1 << std::endl;
 		std::cout << "PLAYER'S TEAM:" << std::endl;
