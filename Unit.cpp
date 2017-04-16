@@ -315,7 +315,7 @@ Attack* Unit::Hit(int i) {
 void Paladin::initUnit() {
 	Shield* weapon = new Shield;
 	type = "Paladin";
-	HP = 300;
+	HP = 100;
 	DF = 150;
 	level = 0;
 	init_max = 25;
@@ -342,7 +342,7 @@ void Paladin::setStat(int damage, Buffs& buff_, int mode) {
 	}
 	if (dist1(gen) > 50 && damage != 0) {
 		Buff* b = new Buff;
-		std::cout << type << " hills his teammates!" << std::endl;
+		std::cout << type << " hills nearby teammates!" << std::endl;
 		std::cout << "Hills " << damage / 2 << " points" << std::endl;
 		b->Init_Buff(damage / 2, 1, "hp", false);
 		spec_Aff.push_back(b);

@@ -354,13 +354,27 @@ void Exclude_Dead(UnArr& Players) {
 	}
 }
 
+void Affect_Teammates(UnArr& FirstPl, int i) {
+	Buffs tmp = FirstPl[i]->getAffects();
+	if (!(tmp.empty())) {
+		for (int j = 0; j < tmp.size(); ++j) {
+			tmp[j]->Set_STatus(true);
+			if (i - 1 >= 0)
+				FirstPl[i - 1]->useEffect(*tmp[j]);
+			if (i + 1 < FirstPl.size())
+				FirstPl[i + 1]->useEffect(*tmp[j]);
+			tmp[j]->~Buff();
+		}
+	}
+}
+
 void Team_Battle(UnArr& FirstPl, UnArr& SecondPl) {
 	for (int i = 0; i < FirstPl.size(); ++i) {
 		std::cout << "Player #" << i + 1 << std::endl;
 		FirstPl[i]->info();
-		
+		int j = -1;
 		if (FirstPl[i]->checkAutoAttack()) {
-			int j;
+			
 			j = AutoAttack(SecondPl);
 			SecondPl[j]->info();
 			Battle(FirstPl[i], SecondPl[j]); // First attacks, Second defence;
@@ -369,9 +383,10 @@ void Team_Battle(UnArr& FirstPl, UnArr& SecondPl) {
 		}
 		else {
 			if (!FirstPl[i]->is_Dead()) {
-				int j;
+				
 				std::cout << "Choose opponent to attack" << std::endl;
 				std::cin >> j;
+				j--;
 				if (j > SecondPl.size() || j < 0) {
 					std::cout << "Wrong choice, be carefull!" << std::endl;
 					std::cout << "Press ENTER to CONTINUE" << std::endl;
@@ -379,26 +394,17 @@ void Team_Battle(UnArr& FirstPl, UnArr& SecondPl) {
 					std::getchar();
 					Team_Battle(FirstPl, SecondPl);
 				}
-				SecondPl[j-1]->info();
-				Battle(FirstPl[i], SecondPl[j - 1]); // First attacks, Second defence;
+				SecondPl[j]->info();
+				Battle(FirstPl[i], SecondPl[j]); // First attacks, Second defence;
 				FirstPl[i]->info();
-				SecondPl[j - 1]->info();
+				SecondPl[j]->info();
 			}
 			else 
 				std::cout << "Unit is dead." << std::endl;
 		}
 		// applying buffs to nearby teammates;
-		Buffs tmp = FirstPl[i]->getAffects();
-		if (!(tmp.empty())) {
-			for (int j = 0; j < tmp.size(); ++j) {
-				tmp[j]->Set_STatus(true);
-				if (i - 1 >= 0)
-				FirstPl[i - 1]->useEffect(*tmp[j]);
-				if (i + 1 < FirstPl.size())
-				FirstPl[i + 1]->useEffect(*tmp[j]);
-				tmp[j]->~Buff();
-			}
-		}
+		Affect_Teammates(FirstPl, i);
+		Affect_Teammates(SecondPl, j);
 
 		std::cout << "Next player attacks!" << std::endl;
 		std::cout << "Press ENTER to CONTINUE" << std::endl;
@@ -522,12 +528,12 @@ void TeamArena(Unit* Player) {
 		// checking initiative;
 		if (summ_pl > summ_opp) {
 			Team_Battle(Players, Opponents);
-			system("CLS");
+			//system("CLS");
 			Team_Battle(Opponents, Players);
 		}
 		else {
 			Team_Battle(Opponents, Players);
-			system("CLS");
+			//system("CLS");
 			Team_Battle(Players, Opponents);
 		}
 	
